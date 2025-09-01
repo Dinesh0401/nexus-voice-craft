@@ -3,9 +3,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { User, Users, Search } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Contact, Group } from "./chatTypes";
+import { ChatContact } from "@/hooks/useRealtimeChat";
+import { Group } from "./chatTypes";
 interface SidebarProps {
-  contacts: Contact[];
+  contacts: ChatContact[];
   groups: Group[];
   activeChat: string | null;
   isMobile: boolean;

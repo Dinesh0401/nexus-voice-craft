@@ -2,13 +2,14 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Phone, Video, Info, Users } from "lucide-react";
-import { Contact, Group } from "./chatTypes";
+import { ChatContact } from "@/hooks/useRealtimeChat";
+import { Group } from "./chatTypes";
 
 interface ChatHeaderProps {
   activeChat: string;
   isMobile: boolean;
   onBack: () => void;
-  contacts: Contact[];
+  contacts: ChatContact[];
   groups: Group[];
 }
 

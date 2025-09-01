@@ -5,6 +5,7 @@ export interface Message {
   sender: "user" | "other";
   timestamp: Date;
   status: "sending" | "sent" | "delivered" | "read";
+  sender_id: string;
 }
 
 export interface Contact {
@@ -15,6 +16,7 @@ export interface Contact {
   unread: number;
   lastMessage: string;
   typing?: boolean;
+  conversation_id?: string;
 }
 
 export interface Group {

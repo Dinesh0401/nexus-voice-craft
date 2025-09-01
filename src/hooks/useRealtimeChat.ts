@@ -76,21 +76,19 @@ export const useRealtimeChat = () => {
         if (!conversation.is_group) {
           const { data: otherParticipants } = await supabase
             .from('conversation_participants')
-            .select(`
-              user_id,
-              profiles(
-                full_name,
-                avatar_url,
-                is_online,
-                status
-              )
-            `)
+            .select('user_id')
             .eq('conversation_id', conversation.id)
             .neq('user_id', currentUserId);
 
           if (otherParticipants && otherParticipants[0]) {
-            const profile = otherParticipants[0].profiles;
-            if (profile) {
+            // Get profile data separately
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('full_name, avatar_url, is_online, status')
+              .eq('id', otherParticipants[0].user_id)
+              .single();
+
+            if (profileData) {
               // Get last message
               const { data: lastMessageData } = await supabase
                 .from('messages')
@@ -108,9 +106,9 @@ export const useRealtimeChat = () => {
 
               contactsData.push({
                 id: otherParticipants[0].user_id,
-                name: profile.full_name || 'Unknown User',
-                status: profile.is_online ? 'online' : 'offline',
-                avatar: profile.avatar_url || '👤',
+                name: profileData.full_name || 'Unknown User',
+                status: profileData.is_online ? 'online' : 'offline',
+                avatar: profileData.avatar_url || '👤',
                 unread: unreadCount || 0,
                 lastMessage: lastMessageData?.[0]?.content || 'No messages yet',
                 conversation_id: conversation.id

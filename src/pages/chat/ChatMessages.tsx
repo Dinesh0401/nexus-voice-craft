@@ -1,15 +1,15 @@
 
 import React, { RefObject } from "react";
 import TypingIndicator from "@/components/TypingIndicator";
-import { Contact, Message } from "./chatTypes";
+import { ChatContact, ChatMessage } from "@/hooks/useRealtimeChat";
 
 interface ChatMessagesProps {
-  messages: Message[];
+  messages: ChatMessage[];
   activeChat: string;
-  contacts: Contact[];
+  contacts: ChatContact[];
   messageEndRef: RefObject<HTMLDivElement>;
   formatMessageTime: (date: Date) => string;
-  getMessageStatusIcon: (status: Message["status"]) => React.ReactNode;
+  getMessageStatusIcon: (status: ChatMessage["status"]) => React.ReactNode;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
