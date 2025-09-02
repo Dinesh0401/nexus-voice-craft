@@ -62,6 +62,48 @@ export type Database = {
         }
         Relationships: []
       }
+      connections: {
+        Row: {
+          created_at: string
+          id: string
+          recipient_id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          recipient_id: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          recipient_id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_flags: {
         Row: {
           content_id: string | null
@@ -504,6 +546,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_connections: {
+        Args: { user_uuid: string }
+        Returns: {
+          avatar_url: string
+          connected_user_id: string
+          connection_id: string
+          full_name: string
+          is_online: boolean
+          status: string
+        }[]
+      }
       update_user_online_status: {
         Args: { is_online: boolean; user_id: string }
         Returns: undefined
