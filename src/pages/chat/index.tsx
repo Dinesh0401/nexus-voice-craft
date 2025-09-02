@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MessageSquare, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import ChatSidebar from "./ChatSidebar";
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
@@ -37,7 +38,12 @@ const ChatPage = () => {
     lastActivity: "2 days ago"
   }]);
 
-  const { contacts, messages, loading, currentUserId, sendMessage, loadMessages } = useRealtimeChat();
+  const { contacts, messages, loading, currentUserId, sendMessage, loadMessages, loadContacts } = useRealtimeChat();
+
+  const handleSelectChat = (id: string, type: 'contact' | 'group' = 'contact') => {
+    setActiveChat(id);
+    setActiveChatType(type);
+  };
   const { toast } = useToast();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -71,9 +77,87 @@ const ChatPage = () => {
     await sendMessage(contact.conversation_id, message.trim());
     setMessage("");
   };
-  const handleSelectChat = (id: string, type: 'contact' | 'group' = 'contact') => {
-    setActiveChat(id);
-    setActiveChatType(type);
+  const handleStartConversation = async (userId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Check if conversation already exists between these users
+      const { data: existingConversation, error: findError } = await supabase
+        .from('conversations')
+        .select(`
+          id,
+          conversation_participants!inner(user_id)
+        `)
+        .eq('is_group', false)
+        .eq('conversation_participants.user_id', userId);
+
+      if (findError) throw findError;
+
+      // Filter conversations where both users are participants
+      let conversationId = null;
+      
+      if (existingConversation && existingConversation.length > 0) {
+        for (const conv of existingConversation) {
+          const { data: participants, error: participantError } = await supabase
+            .from('conversation_participants')
+            .select('user_id')
+            .eq('conversation_id', conv.id);
+
+          if (!participantError && participants) {
+            const userIds = participants.map(p => p.user_id);
+            if (userIds.includes(user.id) && userIds.includes(userId) && userIds.length === 2) {
+              conversationId = conv.id;
+              break;
+            }
+          }
+        }
+      }
+
+      // Create new conversation if none exists
+      if (!conversationId) {
+        const { data: newConversation, error: createError } = await supabase
+          .from('conversations')
+          .insert({
+            is_group: false,
+            created_by: user.id
+          })
+          .select('id')
+          .single();
+
+        if (createError) throw createError;
+        conversationId = newConversation.id;
+
+        // Add both users as participants
+        const { error: participantError } = await supabase
+          .from('conversation_participants')
+          .insert([
+            { conversation_id: conversationId, user_id: user.id },
+            { conversation_id: conversationId, user_id: userId }
+          ]);
+
+        if (participantError) throw participantError;
+      }
+
+      // Reload contacts to show the new conversation
+      loadContacts();
+      
+      // Find the contact in the loaded contacts and select it
+      setTimeout(() => {
+        const contact = contacts.find(c => c.conversation_id === conversationId);
+        if (contact) {
+          setActiveChat(contact.id);
+        }
+      }, 100);
+
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start conversation",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -121,7 +205,8 @@ const ChatPage = () => {
                     groups={groups} 
                     activeChat={activeChat} 
                     isMobile={isMobile} 
-                    onSelectChat={(id) => handleSelectChat(id, 'contact')} 
+                    onSelectChat={(id) => handleSelectChat(id, 'contact')}
+                    onStartConversation={handleStartConversation}
                   />
                   
                   {/* Chat Area */}
