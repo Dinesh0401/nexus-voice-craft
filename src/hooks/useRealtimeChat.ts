@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
@@ -33,6 +33,7 @@ export const useRealtimeChat = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const subscriptionsRef = useRef<{ messages?: any; profiles?: any }>({});
 
   // Get current user
   useEffect(() => {
@@ -240,9 +241,20 @@ export const useRealtimeChat = () => {
   useEffect(() => {
     if (!currentUserId) return;
 
+    // Clean up any existing subscriptions first
+    if (subscriptionsRef.current.messages) {
+      supabase.removeChannel(subscriptionsRef.current.messages);
+    }
+    if (subscriptionsRef.current.profiles) {
+      supabase.removeChannel(subscriptionsRef.current.profiles);
+    }
+
+    // Create unique channel names with timestamp to avoid conflicts
+    const timestamp = Date.now();
+    
     // Subscribe to new messages
     const messageSubscription = supabase
-      .channel(`chat-messages-${currentUserId}`) // Make channel name unique
+      .channel(`chat-messages-${currentUserId}-${timestamp}`)
       .on(
         'postgres_changes',
         {
@@ -272,7 +284,7 @@ export const useRealtimeChat = () => {
               ]
             }));
 
-            // Show toast notification using stable toast reference
+            // Show toast notification
             toast({
               title: "New message",
               description: newMessage.content?.substring(0, 50) + "...",
@@ -284,7 +296,7 @@ export const useRealtimeChat = () => {
 
     // Subscribe to profile updates (online status)
     const profileSubscription = supabase
-      .channel(`chat-profiles-${currentUserId}`) // Make channel name unique
+      .channel(`chat-profiles-${currentUserId}-${timestamp}`)
       .on(
         'postgres_changes',
         {
@@ -307,11 +319,22 @@ export const useRealtimeChat = () => {
       )
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(messageSubscription);
-      supabase.removeChannel(profileSubscription);
+    // Store subscriptions in ref for cleanup
+    subscriptionsRef.current = {
+      messages: messageSubscription,
+      profiles: profileSubscription
     };
-  }, [currentUserId]); // Removed toast from dependencies
+
+    return () => {
+      if (subscriptionsRef.current.messages) {
+        supabase.removeChannel(subscriptionsRef.current.messages);
+      }
+      if (subscriptionsRef.current.profiles) {
+        supabase.removeChannel(subscriptionsRef.current.profiles);
+      }
+      subscriptionsRef.current = {};
+    };
+  }, [currentUserId]);
 
   // Load initial data
   useEffect(() => {
