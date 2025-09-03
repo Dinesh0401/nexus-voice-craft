@@ -242,7 +242,7 @@ export const useRealtimeChat = () => {
 
     // Subscribe to new messages
     const messageSubscription = supabase
-      .channel('chat-messages')
+      .channel(`chat-messages-${currentUserId}`) // Make channel name unique
       .on(
         'postgres_changes',
         {
@@ -272,7 +272,7 @@ export const useRealtimeChat = () => {
               ]
             }));
 
-            // Show toast notification
+            // Show toast notification using stable toast reference
             toast({
               title: "New message",
               description: newMessage.content?.substring(0, 50) + "...",
@@ -284,7 +284,7 @@ export const useRealtimeChat = () => {
 
     // Subscribe to profile updates (online status)
     const profileSubscription = supabase
-      .channel('chat-profiles')
+      .channel(`chat-profiles-${currentUserId}`) // Make channel name unique
       .on(
         'postgres_changes',
         {
@@ -308,10 +308,10 @@ export const useRealtimeChat = () => {
       .subscribe();
 
     return () => {
-      messageSubscription.unsubscribe();
-      profileSubscription.unsubscribe();
+      supabase.removeChannel(messageSubscription);
+      supabase.removeChannel(profileSubscription);
     };
-  }, [currentUserId, toast]);
+  }, [currentUserId]); // Removed toast from dependencies
 
   // Load initial data
   useEffect(() => {
