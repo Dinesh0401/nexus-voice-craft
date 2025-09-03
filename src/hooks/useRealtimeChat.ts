@@ -243,18 +243,20 @@ export const useRealtimeChat = () => {
 
     // Clean up any existing subscriptions first
     if (subscriptionsRef.current.messages) {
+      try { subscriptionsRef.current.messages.unsubscribe?.(); } catch {}
       supabase.removeChannel(subscriptionsRef.current.messages);
     }
     if (subscriptionsRef.current.profiles) {
+      try { subscriptionsRef.current.profiles.unsubscribe?.(); } catch {}
       supabase.removeChannel(subscriptionsRef.current.profiles);
     }
 
-    // Create unique channel names with timestamp to avoid conflicts
-    const timestamp = Date.now();
+    // Create unique channel names with a strong random suffix to avoid collisions in StrictMode
+    const uniqueId = (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
     
     // Subscribe to new messages
     const messageSubscription = supabase
-      .channel(`chat-messages-${currentUserId}-${timestamp}`)
+      .channel(`chat-messages-${currentUserId}-${uniqueId}`)
       .on(
         'postgres_changes',
         {
@@ -296,7 +298,7 @@ export const useRealtimeChat = () => {
 
     // Subscribe to profile updates (online status)
     const profileSubscription = supabase
-      .channel(`chat-profiles-${currentUserId}-${timestamp}`)
+      .channel(`chat-profiles-${currentUserId}-${uniqueId}`)
       .on(
         'postgres_changes',
         {
@@ -327,9 +329,11 @@ export const useRealtimeChat = () => {
 
     return () => {
       if (subscriptionsRef.current.messages) {
+        try { subscriptionsRef.current.messages.unsubscribe?.(); } catch {}
         supabase.removeChannel(subscriptionsRef.current.messages);
       }
       if (subscriptionsRef.current.profiles) {
+        try { subscriptionsRef.current.profiles.unsubscribe?.(); } catch {}
         supabase.removeChannel(subscriptionsRef.current.profiles);
       }
       subscriptionsRef.current = {};
