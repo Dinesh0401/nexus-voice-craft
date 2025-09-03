@@ -40,6 +40,9 @@ export const useRealtimeChat = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setCurrentUserId(user.id);
+      } else {
+        // No user signed in, stop loading
+        setLoading(false);
       }
     };
     getCurrentUser();

@@ -190,7 +190,7 @@ const ChatPage = () => {
             <h1 className="text-3xl font-display mb-6 animate-fade-in text-slate-400 font-bold">Chat</h1>
             
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[600px] flex flex-col md:flex-row animate-scale-in">
-              {loading ? (
+              {loading && currentUserId ? (
                 <div className="flex-1 flex items-center justify-center p-6">
                   <div className="text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-nexus-primary" />
