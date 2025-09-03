@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,6 +33,7 @@ export const useConnections = () => {
   const [connectionRequests, setConnectionRequests] = useState<ConnectionRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const connectionsChannelRef = useRef<any>(null);
 
   const loadConnections = useCallback(async () => {
     try {
@@ -238,24 +239,40 @@ export const useConnections = () => {
       setLoading(true);
       await Promise.all([loadConnections(), loadConnectionRequests()]);
       setLoading(false);
+
+      // After initial load, set up realtime with robust single-subscription handling
+      const { data: { user } } = await supabase.auth.getUser();
+      // Clean any existing channel first (StrictMode safe)
+      if (connectionsChannelRef.current) {
+        try { connectionsChannelRef.current.unsubscribe?.(); } catch {}
+        supabase.removeChannel(connectionsChannelRef.current);
+        connectionsChannelRef.current = null;
+      }
+      if (!user) return;
+
+      const uniqueId = (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+      const channel = supabase
+        .channel(`connections-changes-${user.id}-${uniqueId}`)
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'connections' },
+          () => {
+            loadConnections();
+            loadConnectionRequests();
+          }
+        )
+        .subscribe();
+
+      connectionsChannelRef.current = channel;
     };
 
     initialize();
 
-    // Set up real-time subscriptions for connection updates
-    const connectionsChannel = supabase
-      .channel('connections-changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'connections' },
-        () => {
-          loadConnections();
-          loadConnectionRequests();
-        }
-      )
-      .subscribe();
-
     return () => {
-      supabase.removeChannel(connectionsChannel);
+      if (connectionsChannelRef.current) {
+        try { connectionsChannelRef.current.unsubscribe?.(); } catch {}
+        supabase.removeChannel(connectionsChannelRef.current);
+        connectionsChannelRef.current = null;
+      }
     };
   }, [loadConnections, loadConnectionRequests]);
 
