@@ -21,13 +21,29 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
   const { searchUsers, sendConnectionRequest } = useConnections();
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
+  // Load suggested users on mount
+  useEffect(() => {
+    const loadSuggestedUsers = async () => {
+      if (open && !debouncedSearchTerm.trim()) {
+        console.log('Loading suggested users for connections...');
+        setSearching(true);
+        // Load some random users as suggestions
+        const results = await searchUsers('');
+        setSearchResults(results.slice(0, 5)); // Show first 5 as suggestions
+        setSearching(false);
+      }
+    };
+
+    loadSuggestedUsers();
+  }, [open, debouncedSearchTerm, searchUsers]);
+
   useEffect(() => {
     const performSearch = async () => {
       if (!debouncedSearchTerm.trim()) {
-        setSearchResults([]);
-        return;
+        return; // Don't clear results if no search term, keep suggestions
       }
 
+      console.log('Searching users:', debouncedSearchTerm);
       setSearching(true);
       const results = await searchUsers(debouncedSearchTerm);
       setSearchResults(results);
@@ -38,9 +54,10 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
   }, [debouncedSearchTerm, searchUsers]);
 
   const handleSendRequest = async (userId: string) => {
+    console.log('Sending connection request to:', userId);
     await sendConnectionRequest(userId);
     // Update the search results to reflect the new status
-    const results = await searchUsers(debouncedSearchTerm);
+    const results = await searchUsers(debouncedSearchTerm || '');
     setSearchResults(results);
   };
 
@@ -130,6 +147,11 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
             ) : searchTerm.trim() && !searching ? (
               <div className="text-center p-4 text-muted-foreground">
                 No users found matching "{searchTerm}"
+              </div>
+            ) : !searchTerm.trim() ? (
+              <div className="text-center p-4 text-muted-foreground">
+                <p className="font-medium mb-1">Suggested connections</p>
+                <p className="text-xs">Search for users to find more people to connect with</p>
               </div>
             ) : (
               <div className="text-center p-4 text-muted-foreground">

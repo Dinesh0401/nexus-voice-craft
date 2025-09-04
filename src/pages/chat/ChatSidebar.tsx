@@ -150,8 +150,21 @@ const ChatSidebar: React.FC<SidebarProps> = ({
                       connection.is_online ? "bg-green-500" : "bg-gray-400"
                     } border-2 border-white transition-all duration-300`}></div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate">{connection.full_name}</h3>
+                   <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-medium truncate">{connection.full_name}</h3>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="ml-2 text-xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onStartConversation(connection.connected_user_id);
+                        }}
+                      >
+                        Message
+                      </Button>
+                    </div>
                     <p className="text-sm text-gray-500">
                       {connection.is_online ? "Online" : "Offline"}
                     </p>

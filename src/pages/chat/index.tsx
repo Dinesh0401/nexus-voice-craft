@@ -79,6 +79,7 @@ const ChatPage = () => {
   };
   const handleStartConversation = async (userId: string) => {
     try {
+      console.log('Starting conversation with user:', userId);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -140,15 +141,18 @@ const ChatPage = () => {
       }
 
       // Reload contacts to show the new conversation
-      loadContacts();
+      console.log('Reloading contacts after creating conversation:', conversationId);
+      await loadContacts();
       
       // Find the contact in the loaded contacts and select it
       setTimeout(() => {
         const contact = contacts.find(c => c.conversation_id === conversationId);
+        console.log('Found contact for conversation:', contact);
         if (contact) {
           setActiveChat(contact.id);
+          setActiveChatType('contact');
         }
-      }, 100);
+      }, 500); // Increased timeout to ensure contacts are loaded
 
     } catch (error) {
       console.error('Error starting conversation:', error);
