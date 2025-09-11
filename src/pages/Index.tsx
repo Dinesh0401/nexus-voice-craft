@@ -5,8 +5,9 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import Testimonials from '@/components/Testimonials';
 import CallToAction from '@/components/CallToAction';
-import ChatBot from '@/components/ChatBot';
+import AIAssistant from '@/components/AIAssistant';
 import RecentPosts from '@/components/RecentPosts';
+import AIRecommendations from '@/components/AIRecommendations';
 import Events from '@/components/Events';
 import { useToast } from '@/hooks/use-toast';
 import RecommendedAlumni from '@/components/RecommendedAlumni';
@@ -37,11 +38,18 @@ const Index = () => {
         <main className="flex-grow">
           <Hero />
           <StatisticsCounter />
-          <div className="container my-[18px] mx-[7px] px-[66px] py-[18px] bg-white">
+          <div className="container my-[18px] mx-[7px] px-[66px] py-[18px] bg-gradient-to-br from-white to-gray-50/50">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
-              <AlumniSpotlight />
-              <RecommendedAlumni />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div className="lg:col-span-2 space-y-8">
+                  <AlumniSpotlight />
+                  <RecommendedAlumni />
+                </div>
+                <div className="lg:col-span-1">
+                  <AIRecommendations />
+                </div>
+              </div>
             </TooltipProvider>
           </div>
           <Features />
@@ -63,7 +71,7 @@ const Index = () => {
         </main>
         
         <Footer />
-        <ChatBot />
+        <AIAssistant />
       </div>
     </EnhancedPageTransition>;
 };
