@@ -10,7 +10,7 @@ import RecentPosts from '@/components/RecentPosts';
 import AIRecommendations from '@/components/AIRecommendations';
 import Events from '@/components/Events';
 import { useToast } from '@/hooks/use-toast';
-import RecommendedAlumni from '@/components/RecommendedAlumni';
+import AIPersonalizedConnections from '@/components/AIPersonalizedConnections';
 import AlumniSpotlight from '@/components/AlumniSpotlight';
 import EnhancedPageTransition from '@/components/animations/EnhancedPageTransition';
 import StatisticsCounter from '@/components/StatisticsCounter';
@@ -38,13 +38,13 @@ const Index = () => {
         <main className="flex-grow">
           <Hero />
           <StatisticsCounter />
-          <div className="container my-[18px] mx-[7px] px-[66px] py-[18px] bg-gradient-to-br from-white to-gray-50/50">
+          <div className="container mx-auto px-4 py-8">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <div className="lg:col-span-2 space-y-8">
                   <AlumniSpotlight />
-                  <RecommendedAlumni />
+                  <AIPersonalizedConnections />
                 </div>
                 <div className="lg:col-span-1">
                   <AIRecommendations />
@@ -56,17 +56,6 @@ const Index = () => {
           <Testimonials />
           <RecentPosts />
           <Events />
-           {/* Skeleton Loader Demonstration */}
-           <section className="container mx-auto px-4 py-12 bg-slate-200">
-            <TextReveal variant="fadeIn" delay={0.2} className="text-3xl font-bold text-center mb-8 block">
-              Enhancing User Experience with Loading States
-            </TextReveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <LoadingCard />
-              <LoadingCard />
-              <LoadingCard />
-            </div>
-          </section>
           <CallToAction />
         </main>
         
