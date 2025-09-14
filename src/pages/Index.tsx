@@ -6,11 +6,12 @@ import Features from '@/components/Features';
 import Testimonials from '@/components/Testimonials';
 import CallToAction from '@/components/CallToAction';
 import AIAssistant from '@/components/AIAssistant';
-import RecentPosts from '@/components/RecentPosts';
+import EnhancedRecentPosts from '@/components/EnhancedRecentPosts';
 import AIRecommendations from '@/components/AIRecommendations';
 import Events from '@/components/Events';
 import { useToast } from '@/hooks/use-toast';
 import AIPersonalizedConnections from '@/components/AIPersonalizedConnections';
+// Remove unused imports
 import AlumniSpotlight from '@/components/AlumniSpotlight';
 import EnhancedPageTransition from '@/components/animations/EnhancedPageTransition';
 import StatisticsCounter from '@/components/StatisticsCounter';
@@ -41,20 +42,16 @@ const Index = () => {
           <div className="container mx-auto px-4 py-8">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                <div className="lg:col-span-2 space-y-8">
-                  <AlumniSpotlight />
+              <div className="flex justify-center">
+                <div className="w-full max-w-4xl">
                   <AIPersonalizedConnections />
-                </div>
-                <div className="lg:col-span-1">
-                  <AIRecommendations />
                 </div>
               </div>
             </TooltipProvider>
           </div>
           <Features />
           <Testimonials />
-          <RecentPosts />
+          <EnhancedRecentPosts />
           <Events />
           <CallToAction />
         </main>
