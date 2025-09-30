@@ -1,4 +1,3 @@
-
 # alumNexus - Alumni-Student Networking Platform
 
 ## About alumNexus
