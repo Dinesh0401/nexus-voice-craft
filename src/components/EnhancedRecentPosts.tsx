@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, ArrowRight, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Calendar, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 type Post = {
   id: number;
@@ -22,88 +20,24 @@ const posts: Post[] = [
     id: 1,
     title: "From Campus to Career: A Success Story",
     excerpt: "Learn how our alumni are making waves in their industries...",
-    image: "",
+    image: "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png",
     date: "January 15, 2025",
     category: "Career Success",
-    aiGenerated: true
+    aiGenerated: false
   },
   {
     id: 2,
     title: "Networking in the Digital Age",
     excerpt: "Tips and strategies for building meaningful professional connections...",
-    image: "",
+    image: "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png",
     date: "December 2, 2024", 
     category: "Professional Development",
-    aiGenerated: true
+    aiGenerated: false
   }
 ];
 
 const EnhancedRecentPosts = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [postsWithImages, setPostsWithImages] = useState<Post[]>(posts);
-  const [loadingImages, setLoadingImages] = useState(true);
-
-  useEffect(() => {
-    generateImagesForPosts();
-  }, []);
-
-  const generateImagesForPosts = async () => {
-    try {
-      const updatedPosts = await Promise.all(
-        posts.map(async (post) => {
-          if (post.aiGenerated) {
-            const imagePrompt = getImagePrompt(post);
-            const generatedImage = await generateBlogImage(imagePrompt, post.title, post.category || 'General');
-            return {
-              ...post,
-              image: generatedImage || "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png"
-            };
-          }
-          return post;
-        })
-      );
-      
-      setPostsWithImages(updatedPosts);
-      setLoadingImages(false);
-    } catch (error) {
-      console.error('Error generating images:', error);
-      // Fallback to existing images
-      setPostsWithImages(posts.map(post => ({
-        ...post,
-        image: post.id === 1 ? "/lovable-uploads/87030a39-6fa7-425b-99f4-05b0abb9ded1.png" : "/lovable-uploads/55f04ec5-8a46-435f-bfc6-06b4f7389672.png"
-      })));
-      setLoadingImages(false);
-      
-      toast({
-        title: "Note",
-        description: "AI image generation requires Hugging Face API key setup. Using placeholder images."
-      });
-    }
-  };
-
-  const getImagePrompt = (post: Post): string => {
-    const prompts: Record<number, string> = {
-      1: "Young professional graduate in business attire walking confidently from university campus towards modern office buildings, representing career transition and success",
-      2: "Modern digital networking concept with connected people icons, laptops, smartphones, and virtual meeting interfaces in a professional tech environment"
-    };
-    
-    return prompts[post.id] || "Professional blog post header image with modern corporate aesthetic";
-  };
-
-  const generateBlogImage = async (prompt: string, title: string, category: string): Promise<string | null> => {
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-blog-images', {
-        body: { prompt, title, category }
-      });
-
-      if (error) throw error;
-      return data.image;
-    } catch (error) {
-      console.error('Error generating image:', error);
-      return null;
-    }
-  };
 
   const handleReadMore = (postId: number) => {
     navigate(`/blog/${postId}`);
@@ -111,11 +45,6 @@ const EnhancedRecentPosts = () => {
 
   const handleViewAllArticles = () => {
     navigate('/blog');
-  };
-
-  const handleRegenerateImages = () => {
-    setLoadingImages(true);
-    generateImagesForPosts();
   };
 
   return (
@@ -141,22 +70,9 @@ const EnhancedRecentPosts = () => {
             Insights, success stories, and advice from our community, enhanced with AI-generated visuals.
           </p>
         </motion.div>
-
-        {/* Regenerate Button */}
-        <div className="flex justify-center mb-8">
-          <Button 
-            onClick={handleRegenerateImages}
-            variant="outline"
-            className="border-ai-border hover:bg-ai-surface"
-            disabled={loadingImages}
-          >
-            <ImageIcon className="w-4 h-4 mr-2" />
-            {loadingImages ? 'Generating Images...' : 'Regenerate AI Images'}
-          </Button>
-        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {postsWithImages.map((post, index) => (
+          {posts.map((post, index) => (
             <motion.div 
               key={post.id} 
               className="group relative"
@@ -178,23 +94,14 @@ const EnhancedRecentPosts = () => {
 
                 {/* Image Container */}
                 <div className="relative h-64 overflow-hidden">
-                  {loadingImages ? (
-                    <div className="w-full h-full bg-gradient-to-r from-ai-surface via-ai-accent/20 to-ai-surface animate-shimmer bg-[length:200%_100%] flex items-center justify-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <Sparkles className="w-8 h-8 text-ai-primary animate-pulse" />
-                        <span className="text-sm text-muted-foreground">Generating AI image...</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <motion.img 
-                      src={post.image} 
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
-                  )}
+                  <motion.img 
+                    src={post.image} 
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                  />
                   
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
