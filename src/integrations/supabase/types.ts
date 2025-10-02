@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_conversations: {
+        Row: {
+          agent_type: string
+          context_summary: string | null
+          created_at: string | null
+          embedding: string | null
+          id: string
+          messages: Json[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          agent_type: string
+          context_summary?: string | null
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          messages?: Json[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          agent_type?: string
+          context_summary?: string | null
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          messages?: Json[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -59,6 +92,39 @@ export type Database = {
           event_type?: string
           id?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      career_insights: {
+        Row: {
+          confidence_score: number | null
+          created_at: string | null
+          data_sources: string[] | null
+          id: string
+          insight_type: string
+          prediction: Json
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string | null
+          data_sources?: string[] | null
+          id?: string
+          insight_type: string
+          prediction: Json
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string | null
+          data_sources?: string[] | null
+          id?: string
+          insight_type?: string
+          prediction?: Json
+          user_id?: string
+          valid_until?: string | null
         }
         Relationships: []
       }
@@ -263,6 +329,39 @@ export type Database = {
           id?: string
           is_group?: boolean | null
           name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      knowledge_base: {
+        Row: {
+          content: string
+          content_type: string
+          created_at: string | null
+          embedding: string | null
+          id: string
+          metadata: Json | null
+          source_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          content: string
+          content_type: string
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+          source_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string
+          content_type?: string
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+          source_id?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -493,6 +592,48 @@ export type Database = {
           },
         ]
       }
+      user_knowledge_graph: {
+        Row: {
+          compatibility_score: number | null
+          connected_user_id: string
+          created_at: string | null
+          id: string
+          interaction_count: number | null
+          last_interaction: string | null
+          metadata: Json | null
+          relationship_type: string
+          shared_interests: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          compatibility_score?: number | null
+          connected_user_id: string
+          created_at?: string | null
+          id?: string
+          interaction_count?: number | null
+          last_interaction?: string | null
+          metadata?: Json | null
+          relationship_type: string
+          shared_interests?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          compatibility_score?: number | null
+          connected_user_id?: string
+          created_at?: string | null
+          id?: string
+          interaction_count?: number | null
+          last_interaction?: string | null
+          metadata?: Json | null
+          relationship_type?: string
+          shared_interests?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_points: {
         Row: {
           id: string
@@ -546,6 +687,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      binary_quantize: {
+        Args: { "": string } | { "": unknown }
+        Returns: unknown
+      }
       get_user_connections: {
         Args: { user_uuid: string }
         Returns: {
@@ -557,9 +702,97 @@ export type Database = {
           status: string
         }[]
       }
+      halfvec_avg: {
+        Args: { "": number[] }
+        Returns: unknown
+      }
+      halfvec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      halfvec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      halfvec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
+      hnsw_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_sparsevec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnswhandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflathandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      l2_norm: {
+        Args: { "": unknown } | { "": unknown }
+        Returns: number
+      }
+      l2_normalize: {
+        Args: { "": string } | { "": unknown } | { "": unknown }
+        Returns: string
+      }
+      sparsevec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      sparsevec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      sparsevec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
       update_user_online_status: {
         Args: { is_online: boolean; user_id: string }
         Returns: undefined
+      }
+      vector_avg: {
+        Args: { "": number[] }
+        Returns: string
+      }
+      vector_dims: {
+        Args: { "": string } | { "": unknown }
+        Returns: number
+      }
+      vector_norm: {
+        Args: { "": string }
+        Returns: number
+      }
+      vector_out: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      vector_send: {
+        Args: { "": string }
+        Returns: string
+      }
+      vector_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
       }
     }
     Enums: {
