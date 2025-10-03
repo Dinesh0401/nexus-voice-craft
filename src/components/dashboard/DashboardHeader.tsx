@@ -12,13 +12,13 @@ export function DashboardHeader({ userName }: DashboardHeaderProps) {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary/80 p-6 text-primary-foreground"
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-secondary to-primary p-8 text-primary-foreground shadow-2xl"
     >
       <div className="absolute inset-0 bg-grid-white/10" />
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-white/20 rounded-lg">
-            <User className="h-6 w-6" />
+          <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg">
+            <User className="h-7 w-7" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">

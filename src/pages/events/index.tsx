@@ -137,11 +137,15 @@ const EventsPage = () => {
   return <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-grow bg-green-50">
+      <main className="flex-grow bg-gradient-to-br from-primary-light/20 via-background to-secondary/10 relative">
+        {/* Decorative background */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIGZpbGw9IiM5ZWZjYzYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-40"></div>
+        <div className="relative z-10">
         {/* Hero Section */}
         <EventHero />
         
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+        </div>
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           {/* Filters */}
           <EventFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} selectedTypes={selectedTypes} onTypeToggle={handleTypeToggle} onClearFilters={handleClearFilters} />
           
@@ -155,7 +159,7 @@ const EventsPage = () => {
         }} transition={{
           duration: 0.6
         }}>
-              <motion.h2 className="text-3xl font-display font-bold mb-8 text-center" initial={{
+              <motion.h2 className="text-4xl md:text-5xl font-display font-bold mb-12 text-center gradient-text" initial={{
             opacity: 0
           }} animate={{
             opacity: 1
@@ -193,7 +197,7 @@ const EventsPage = () => {
           duration: 0.6,
           delay: 0.3
         }}>
-            <motion.h2 className="text-3xl font-display font-bold mb-8 text-center" initial={{
+            <motion.h2 className="text-4xl md:text-5xl font-display font-bold mb-12 text-center gradient-text" initial={{
             opacity: 0
           }} animate={{
             opacity: 1
@@ -244,7 +248,7 @@ const EventsPage = () => {
           }} transition={{
             delay: 0.8
           }}>
-              <div className="bg-gradient-to-br from-primary/10 via-background to-accent/10 p-8 rounded-2xl text-center border border-border/50">
+              <div className="bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20 p-10 rounded-3xl text-center border-2 border-primary/20 shadow-2xl backdrop-blur-sm">
                 <motion.div className="text-4xl mb-4" animate={{
                 rotate: [0, 10, -10, 0],
                 scale: [1, 1.1, 1]
@@ -255,12 +259,12 @@ const EventsPage = () => {
               }}>
                   💡
                 </motion.div>
-                <h3 className="text-2xl font-bold mb-3">Want to propose an event?</h3>
-                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                <h3 className="text-3xl font-bold mb-4">Want to propose an event?</h3>
+                <p className="text-foreground/70 mb-8 max-w-2xl mx-auto text-lg">
                   Are you an alumnus interested in organizing an event, workshop, or mentorship program? 
                   We welcome your ideas and initiatives to strengthen our community.
                 </p>
-                <Button onClick={() => navigate('/contact')} className="gap-2" size="lg">
+                <Button onClick={() => navigate('/contact')} className="gap-2 shadow-xl hover:shadow-2xl" size="lg" variant="gradient">
                   Contact Us
                   <ArrowRight className="h-4 w-4" />
                 </Button>

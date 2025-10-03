@@ -51,7 +51,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
       className={cn("cursor-pointer h-full", className)}
       style={{ perspective: '1000px' }}
     >
-      <Card className="transition-all duration-300 border-2 border-transparent hover:border-nexus-primary/20 overflow-hidden h-full">
+      <Card className="transition-all duration-300 border-2 border-transparent hover:border-primary/30 overflow-hidden h-full hover:shadow-2xl bg-gradient-to-br from-card to-card/80">
         {children}
       </Card>
     </motion.div>

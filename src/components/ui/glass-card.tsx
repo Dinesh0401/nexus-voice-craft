@@ -18,29 +18,30 @@ export function GlassCard({
   gradient = false
 }: GlassCardProps) {
   const intensityClasses = {
-    light: 'bg-white/5 backdrop-blur-sm border-white/10',
-    medium: 'bg-white/10 backdrop-blur-md border-white/20',
-    heavy: 'bg-white/20 backdrop-blur-lg border-white/30'
+    light: 'bg-white/10 backdrop-blur-sm border-white/20 shadow-lg',
+    medium: 'bg-white/20 backdrop-blur-md border-white/30 shadow-xl',
+    heavy: 'bg-white/30 backdrop-blur-lg border-white/40 shadow-2xl'
   };
 
   const darkIntensityClasses = {
-    light: 'dark:bg-black/5 dark:border-white/5',
-    medium: 'dark:bg-black/10 dark:border-white/10', 
-    heavy: 'dark:bg-black/20 dark:border-white/20'
+    light: 'dark:bg-black/20 dark:border-white/10 dark:shadow-[0_0_20px_rgba(158,252,198,0.1)]',
+    medium: 'dark:bg-black/30 dark:border-white/20 dark:shadow-[0_0_30px_rgba(158,252,198,0.15)]', 
+    heavy: 'dark:bg-black/40 dark:border-white/30 dark:shadow-[0_0_40px_rgba(158,252,198,0.2)]'
   };
 
   return (
     <motion.div
       className={cn(
-        "rounded-xl border shadow-lg",
+        "rounded-2xl border shadow-lg",
         intensityClasses[intensity],
         darkIntensityClasses[intensity],
-        "transition-all duration-300",
-        hoverEffect && "hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1",
+        "transition-all duration-500",
+        hoverEffect && "hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2",
+        gradient && "bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5",
         className
       )}
-      whileHover={hoverEffect ? { y: -4 } : undefined}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      whileHover={hoverEffect ? { y: -6, scale: 1.02 } : undefined}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
       {children}
     </motion.div>

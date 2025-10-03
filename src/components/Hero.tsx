@@ -31,32 +31,35 @@ const Hero = () => {
   const handleExploreMentorship = () => {
     navigate('/mentorship');
   };
-  return <section className="bg-emerald-50">
+  return <section className="bg-gradient-to-br from-primary-light/30 via-background to-secondary/10 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIGZpbGw9IiM5ZWZjYzYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-40"></div>
       {/* Hero carousel */}
-      <div className="w-full border-t border-b border-gray-200">
+      <div className="w-full relative z-10">
         <Carousel className="w-full relative">
           <CarouselContent>
             {heroImages.map((image, index) => <CarouselItem key={index}>
                 <div className="relative">
                   <img src={image.src} alt={image.alt} className="w-full h-[500px] object-cover" />
-                  <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded text-sm font-medium">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-semibold shadow-lg">
                     {index + 1}/{heroImages.length}
                   </div>
                 </div>
               </CarouselItem>)}
           </CarouselContent>
-          <CarouselPrevious className="absolute left-4 bg-white/80 hover:bg-white" />
-          <CarouselNext className="absolute right-4 bg-white/80 hover:bg-white" />
+          <CarouselPrevious className="absolute left-6 bg-white/90 backdrop-blur-md hover:bg-white shadow-xl" />
+          <CarouselNext className="absolute right-6 bg-white/90 backdrop-blur-md hover:bg-white shadow-xl" />
         </Carousel>
       </div>
       
       {/* Mission statement */}
-      <div className="max-w-7xl mx-auto py-12 px-4 md:px-8 bg-emerald-50">
-        <TextReveal variant="slideUp" delay={0.2} className="text-4xl font-bold text-gray-800 text-center mb-8 block">
+      <div className="max-w-7xl mx-auto py-16 px-4 md:px-8 relative z-10">
+        <TextReveal variant="slideUp" delay={0.2} className="text-5xl md:text-6xl font-bold text-center mb-12 block gradient-text">
           Our Mission
         </TextReveal>
         
-        <TextReveal variant="fadeIn" delay={0.6} className="text-xl text-gray-700 text-center max-w-4xl mx-auto leading-relaxed block mb-8">
+        <TextReveal variant="fadeIn" delay={0.6} className="text-xl md:text-2xl text-foreground/80 text-center max-w-4xl mx-auto leading-relaxed block mb-12 font-light">
           At Knowledge Institute of Technology, we are dedicated to fostering a strong and lasting bond between 
           students and alumni, creating a network where knowledge, experience, and 
           opportunities flow seamlessly. Our mission is to empower students by providing 
@@ -64,10 +67,10 @@ const Hero = () => {
           our alumni community.
         </TextReveal>
         
-        <div className="flex justify-center mt-8">
-          <AnimatedButton animation="pulse" size="lg" className="bg-nexus-primary text-white text-lg px-8 py-6 rounded-md flex items-center" onClick={handleJoinCommunity}>
+        <div className="flex justify-center mt-12 gap-4 flex-wrap">
+          <AnimatedButton animation="pulse" size="lg" className="bg-gradient-to-r from-primary via-secondary to-accent text-white text-lg px-10 py-7 rounded-xl flex items-center shadow-2xl hover:shadow-[0_0_40px_rgba(158,252,198,0.4)] hover:scale-105 transition-all duration-300" onClick={handleJoinCommunity}>
             Join our community today
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <ArrowRight className="ml-2 h-6 w-6" />
           </AnimatedButton>
         </div>
       </div>
