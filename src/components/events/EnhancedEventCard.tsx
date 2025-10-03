@@ -54,7 +54,6 @@ export function EnhancedEventCard({ event, onRegister, variant = 'standard' }: E
           overflow-hidden h-full
           ${isFeatured ? 'lg:flex lg:flex-row' : 'flex flex-col'}
         `}
-        gradient={isFeatured}
         intensity={isFeatured ? 'medium' : 'light'}
       >
         {/* Event Image */}

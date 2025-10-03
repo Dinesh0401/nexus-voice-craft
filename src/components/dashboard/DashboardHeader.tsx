@@ -11,39 +11,33 @@ export function DashboardHeader({ userName }: DashboardHeaderProps) {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-secondary to-primary p-8 text-primary-foreground shadow-2xl"
+      className="rounded-lg bg-gradient-to-r from-primary to-primary/80 p-6 text-primary-foreground shadow-lg"
     >
-      <div className="absolute inset-0 bg-grid-white/10" />
-      <div className="relative z-10">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg">
-            <User className="h-7 w-7" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">
-              Welcome back{userName ? `, ${userName}` : ""}
-            </h1>
-            <p className="text-primary-foreground/80">
-              Your alumni hub at a glance
-            </p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-6 text-sm text-primary-foreground/90">
-          <div className="flex items-center gap-2">
-            <Activity className="h-4 w-4" />
-            <span>Dashboard</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>{new Date().toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}</span>
-          </div>
+      <div className="flex items-center gap-4">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring" }}
+        >
+          <User className="h-12 w-12" />
+        </motion.div>
+        <div>
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-3xl font-bold mb-1"
+          >
+            Welcome back, {userName}!
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-primary-foreground/80"
+          >
+            Here's what's happening with your alumni network today
+          </motion.p>
         </div>
       </div>
     </motion.div>
