@@ -55,6 +55,7 @@ export type NavLinkItem = { name: string; href: string };
 export const navLinks: NavLinkItem[] = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
+  { name: 'AI Features', href: '/ai-demo' },
   { name: 'Resources', href: '/resources' },
   { name: 'Events', href: '/events' },
   { name: 'Mentorship', href: '/mentorship' },

@@ -23,6 +23,7 @@ const blogRoutes = require('./routes/blogRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 // Import services
 const NotificationService = require('./services/notificationService');
@@ -129,6 +130,7 @@ app.use(`/api/${apiVersion}/blog`, blogRoutes);
 app.use(`/api/${apiVersion}/upload`, uploadRoutes);
 app.use(`/api/${apiVersion}/notifications`, notificationRoutes);
 app.use(`/api/${apiVersion}/search`, searchRoutes);
+app.use(`/api/${apiVersion}/ai`, aiRoutes);
 
 // Enhanced Socket.IO connection handling
 io.on('connection', (socket) => {

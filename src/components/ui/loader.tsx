@@ -1,7 +1,7 @@
 
 import React from "react";
 
-export default function Loader({ size = 20 }: { size?: number }) {
+export function Loader({ size = 20 }: { size?: number }) {
   return (
     <svg
       className="animate-spin mx-auto"
@@ -32,3 +32,5 @@ export default function Loader({ size = 20 }: { size?: number }) {
     </svg>
   );
 }
+
+export default Loader;

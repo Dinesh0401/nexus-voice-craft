@@ -35,6 +35,7 @@ import AlumniPage from "./pages/alumni";
 import AlumniPrivacySettingsPage from "./pages/alumni/privacy-settings";
 import CallPage from "./pages/mock-interviews/call";
 import RAGDemoPage from "./pages/rag-demo";
+import AIDemoPage from "./pages/ai-demo";
 import { AuthProvider } from "./hooks/useAuth";
 
 const AnimatedRoutes = () => {
@@ -80,7 +81,10 @@ const AnimatedRoutes = () => {
         
         {/* RAG Demo Route */}
         <Route path="/rag-demo" element={<RAGDemoPage />} />
-        
+
+        {/* AI Demo Route */}
+        <Route path="/ai-demo" element={<AIDemoPage />} />
+
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

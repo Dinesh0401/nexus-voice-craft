@@ -1,9 +1,24 @@
-# alumNexus - Alumni-Student Networking Platform
+# Alumni Nexus - AI-Powered Alumni Networking Platform
 
-Website link : [kiotalumni](https://kiotalumnimeet.netlify.app/)
-## About alumNexus
+🚀 **Live Demo**: [kiotalumni](https://kiotalumnimeet.netlify.app/)
 
-alumNexus is a next-generation networking platform connecting students with alumni mentors. Our mission is to foster a strong and lasting bond between students and alumni, creating a network where knowledge, experience, and opportunities flow seamlessly.
+## 🎯 Quick Start
+
+Get started in 5 minutes! See **[QUICK_START.md](./QUICK_START.md)** for instant setup.
+
+For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
+
+## About Alumni Nexus
+
+Alumni Nexus is a comprehensive, production-ready networking platform that combines modern web technologies with cutting-edge AI capabilities. Connect students with alumni through intelligent recommendations, real-time communication, and personalized career guidance powered by open-source AI.
+
+### ✨ New: AI-Powered Features
+
+- **AI Chat Assistant**: Real-time conversational AI for career guidance
+- **Smart Recommendations**: ML-based alumni, mentor, and event suggestions
+- **Career Advisor**: Personalized career insights powered by Meta Llama 3.2
+- **Profile Analyzer**: AI-driven feedback and optimization
+- **Interview Prep**: AI-generated interview questions and tips
 
 ## Key Features
 
@@ -37,12 +52,28 @@ alumNexus is a next-generation networking platform connecting students with alum
 
 ## Technologies Used
 
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn-ui
-- Vite
-- React Router Dom
+### Frontend
+- React 18 with TypeScript
+- Vite 5.4 (Build tool)
+- Tailwind CSS 3.4 + shadcn/ui
+- React Router v6
+- Framer Motion (Animations)
+- Socket.IO Client (Real-time)
+- Axios (HTTP Client)
+
+### Backend
+- Express.js 4.18
+- Node.js 18+
+- Supabase (PostgreSQL)
+- JWT Authentication
+- Socket.IO (WebSocket)
+- OpenRouter API (AI Integration)
+- Redis (Caching)
+
+### AI Integration
+- **Provider**: OpenRouter
+- **Model**: Meta Llama 3.2 (3B parameters, FREE)
+- **Features**: Chat, recommendations, career advice, profile analysis
 
 ## Animation & Interaction Patterns
 
@@ -53,8 +84,53 @@ alumNexus is a next-generation networking platform connecting students with alum
 
 ## Getting Started
 
-To run this project locally:
+### Option 1: Quick Start (Recommended)
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
+```bash
+# Install dependencies
+npm install
+cd server && npm install && cd ..
+
+# Configure backend (see QUICK_START.md)
+# Edit server/.env with your OpenRouter API key
+
+# Start both servers
+./start.sh
+```
+
+### Option 2: Manual Setup
+
+**Frontend:**
+```bash
+npm install
+npm run dev
+```
+
+**Backend:**
+```bash
+cd server
+npm install
+npm run dev
+```
+
+### Access the Application
+
+- **Main App**: http://localhost:8080
+- **AI Features Demo**: http://localhost:8080/ai-demo
+- **Backend API**: http://localhost:5000
+- **Health Check**: http://localhost:5000/health
+
+## 📚 Documentation
+
+- **[QUICK_START.md](./QUICK_START.md)** - Get started in 5 minutes
+- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Complete setup instructions
+- **[PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)** - Architecture & features
+- **[server/README.md](./server/README.md)** - Backend API documentation
+
+## 🚀 Production Build
+
+```bash
+npm run build
+```
+
+Deploy the `dist/` folder to any static hosting service (Vercel, Netlify, etc.)

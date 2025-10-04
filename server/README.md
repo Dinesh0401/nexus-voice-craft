@@ -19,11 +19,13 @@ A comprehensive backend API for the Alumni Networking Platform built with Node.j
 
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js
-- **Database**: PostgreSQL with Knex.js ORM
+- **Database**: PostgreSQL with Knex.js ORM / Supabase
 - **Authentication**: JWT (JSON Web Tokens)
 - **Real-time**: Socket.IO
+- **AI Integration**: OpenRouter API (Meta Llama 3.2)
 - **File Storage**: Cloudinary
 - **Email**: Nodemailer
+- **Caching**: Redis
 - **Validation**: Joi & express-validator
 - **Security**: Helmet, CORS, Rate Limiting
 
