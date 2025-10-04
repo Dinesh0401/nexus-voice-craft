@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { aiAPI, alumniAPI, eventAPI, mentorshipAPI } from '@/services/api';
-import { Sparkles, Users, Calendar, GraduationCap, Loader2 } from 'lucide-react';
+import { Sparkles, Users, Calendar, GraduationCap, Loader as Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 
