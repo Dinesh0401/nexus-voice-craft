@@ -109,9 +109,7 @@
   }
   
   .glow-text {
-    text-shadow: 0 0 20px hsl(var(--primary) / 0.5), 
-                 0 0 40px hsl(var(--primary) / 0.3),
-                 0 0 60px hsl(var(--secondary) / 0.2);
+    animation: glowShine 2s ease-in-out infinite;
   }
 }
 
@@ -135,6 +133,34 @@
   }
   100% {
     box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+@keyframes glowShine {
+  0% {
+    text-shadow: 0 0 20px hsl(167 70% 42% / 0.8), 
+                 0 0 40px hsl(167 70% 42% / 0.6),
+                 0 0 60px hsl(210 70% 45% / 0.4);
+  }
+  25% {
+    text-shadow: 0 0 20px hsl(210 70% 45% / 0.8), 
+                 0 0 40px hsl(45 100% 51% / 0.6),
+                 0 0 60px hsl(167 70% 42% / 0.4);
+  }
+  50% {
+    text-shadow: 0 0 20px hsl(45 100% 51% / 0.8), 
+                 0 0 40px hsl(180 65% 45% / 0.6),
+                 0 0 60px hsl(210 70% 45% / 0.4);
+  }
+  75% {
+    text-shadow: 0 0 20px hsl(180 65% 45% / 0.8), 
+                 0 0 40px hsl(167 70% 42% / 0.6),
+                 0 0 60px hsl(45 100% 51% / 0.4);
+  }
+  100% {
+    text-shadow: 0 0 20px hsl(167 70% 42% / 0.8), 
+                 0 0 40px hsl(167 70% 42% / 0.6),
+                 0 0 60px hsl(210 70% 45% / 0.4);
   }
 }
 
