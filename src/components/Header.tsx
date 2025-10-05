@@ -61,7 +61,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8">
           {/* Enhanced Logo Section */}
           <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
-            <div className="flex items-center gap-3 md:gap-4">
+            <div className="flex items-center gap-3 md:gap-4 rounded-xl bg-slate-50 mx-0 px-0 my-0 py-0">
               <div className="relative">
                 <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-14 md:h-16 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
               </div>
@@ -96,24 +96,24 @@ const Header = () => {
                   <DropdownMenuLabel className="text-nexus-primary font-semibold">Notifications</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {[{
-                title: "New mentor connection",
-                description: "Dr. Anand Sharma accepted your request",
-                time: "2 hours ago",
-                icon: UserPlus,
-                iconClass: "text-green-500"
-              }, {
-                title: "Upcoming mock interview",
-                description: "Tomorrow at 3:00 PM with Sarah Johnson",
-                time: "1 day ago",
-                icon: Calendar,
-                iconClass: "text-blue-500"
-              }, {
-                title: "New forum reply",
-                description: "Someone replied to your post about career advice",
-                time: "2 days ago",
-                icon: MessageSquare,
-                iconClass: "text-purple-500"
-              }].map((notification, index) => <DropdownMenuItem key={index} className="flex items-start py-3 px-4 cursor-pointer hover:bg-nexus-primary/5">
+                  title: "New mentor connection",
+                  description: "Dr. Anand Sharma accepted your request",
+                  time: "2 hours ago",
+                  icon: UserPlus,
+                  iconClass: "text-green-500"
+                }, {
+                  title: "Upcoming mock interview",
+                  description: "Tomorrow at 3:00 PM with Sarah Johnson",
+                  time: "1 day ago",
+                  icon: Calendar,
+                  iconClass: "text-blue-500"
+                }, {
+                  title: "New forum reply",
+                  description: "Someone replied to your post about career advice",
+                  time: "2 days ago",
+                  icon: MessageSquare,
+                  iconClass: "text-purple-500"
+                }].map((notification, index) => <DropdownMenuItem key={index} className="flex items-start py-3 px-4 cursor-pointer hover:bg-nexus-primary/5">
                       <div className={`rounded-full p-2 ${notification.iconClass} bg-gray-100 mr-3`}>
                         <notification.icon className="h-4 w-4" />
                       </div>
