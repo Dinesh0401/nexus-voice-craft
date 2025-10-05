@@ -4,7 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Search, Loader2, MessageCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UserPlus, Search, Loader2, MessageCircle, Users, UserCheck, UserX } from 'lucide-react';
 import { useConnections, type UserSearchResult, type Connection } from '@/hooks/useConnections';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
@@ -20,39 +21,61 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
   const [connectionResults, setConnectionResults] = useState<UserSearchResult[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
   
   const { connections, searchUsers, sendConnectionRequest } = useConnections();
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Load suggested connections when dialog opens
+  // Load all connections and pending requests when dialog opens
   useEffect(() => {
-    if (open && !debouncedSearchTerm.trim()) {
-      console.log('Loading suggested connections...');
-      // Show existing connections as suggestions
-      const suggestedConnections: UserSearchResult[] = connections
+    const loadConnections = async () => {
+      if (!open) return;
+      
+      console.log('Loading all connections...');
+      // Show ALL connections
+      const allConnections: UserSearchResult[] = connections
         .sort((a, b) => {
           // Sort by online status first, then by name
           if (a.is_online && !b.is_online) return -1;
           if (!a.is_online && b.is_online) return 1;
           return a.full_name.localeCompare(b.full_name);
         })
-        .slice(0, 8) // Show top 8 connections
         .map(conn => ({
           id: conn.connected_user_id,
           full_name: conn.full_name,
           avatar_url: conn.avatar_url,
-          username: '', // connections don't have username in this context
+          username: '',
           is_online: conn.is_online,
           connection_status: 'accepted' as const
         }));
       
-      setConnectionResults(suggestedConnections);
-      setSearchResults([]);
-    }
-  }, [open, debouncedSearchTerm, connections]);
+      setConnectionResults(allConnections);
+      
+      // Load pending requests
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: requests } = await supabase
+          .from('connections')
+          .select(`
+            id,
+            created_at,
+            status,
+            requester:requester_id(id, full_name, avatar_url),
+            recipient:recipient_id(id, full_name, avatar_url)
+          `)
+          .or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`)
+          .eq('status', 'pending');
+        
+        setPendingRequests(requests || []);
+      }
+    };
+    
+    loadConnections();
+  }, [open, connections]);
 
   useEffect(() => {
     const performSearch = async () => {
@@ -190,6 +213,88 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
     }
   };
 
+  const handleAcceptRequest = async (connectionId: string) => {
+    try {
+      const { error } = await supabase
+        .from('connections')
+        .update({ status: 'accepted' })
+        .eq('id', connectionId);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "Connection request accepted!",
+      });
+      
+      // Refresh pending requests
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: requests } = await supabase
+          .from('connections')
+          .select(`
+            id,
+            created_at,
+            status,
+            requester:requester_id(id, full_name, avatar_url),
+            recipient:recipient_id(id, full_name, avatar_url)
+          `)
+          .or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`)
+          .eq('status', 'pending');
+        
+        setPendingRequests(requests || []);
+      }
+    } catch (error) {
+      console.error('Error accepting request:', error);
+      toast({
+        title: "Error",
+        description: "Failed to accept connection request",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRejectRequest = async (connectionId: string) => {
+    try {
+      const { error } = await supabase
+        .from('connections')
+        .delete()
+        .eq('id', connectionId);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "Connection request rejected",
+      });
+      
+      // Refresh pending requests
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: requests } = await supabase
+          .from('connections')
+          .select(`
+            id,
+            created_at,
+            status,
+            requester:requester_id(id, full_name, avatar_url),
+            recipient:recipient_id(id, full_name, avatar_url)
+          `)
+          .or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`)
+          .eq('status', 'pending');
+        
+        setPendingRequests(requests || []);
+      }
+    } catch (error) {
+      console.error('Error rejecting request:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reject connection request",
+        variant: "destructive",
+      });
+    }
+  };
+
   const renderUserCard = (user: UserSearchResult, showMessageButton: boolean = false) => (
     <div key={user.id} className="flex items-center justify-between p-3 border rounded-lg">
       <div className="flex items-center gap-3">
@@ -252,78 +357,158 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
       <DialogTrigger asChild>
         {trigger || defaultTrigger}
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-2xl max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>Add New Connection</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            Connections & Network
+          </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search for users by name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="all" className="gap-2">
+              <UserCheck className="h-4 w-4" />
+              All ({connectionResults.length})
+            </TabsTrigger>
+            <TabsTrigger value="requests" className="gap-2">
+              <UserPlus className="h-4 w-4" />
+              Requests ({pendingRequests.length})
+            </TabsTrigger>
+            <TabsTrigger value="search" className="gap-2">
+              <Search className="h-4 w-4" />
+              Find People
+            </TabsTrigger>
+          </TabsList>
 
-          <div className="max-h-64 overflow-y-auto space-y-3">
-            {searching ? (
-              <div className="flex items-center justify-center p-4">
-                <Loader2 className="h-5 w-5 animate-spin" />
-              </div>
-            ) : (
-              <>
-                {/* Your Connections Section */}
-                {connectionResults.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-muted-foreground px-1">
-                      {searchTerm.trim() ? 'Your connections' : 'Suggested connections'}
-                    </h4>
-                    <div className="space-y-2">
-                      {connectionResults.map((user) => renderUserCard(user, true))}
+          {/* All Connections Tab */}
+          <TabsContent value="all" className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search your connections..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="max-h-96 overflow-y-auto space-y-2">
+              {connectionResults.length > 0 ? (
+                connectionResults
+                  .filter(conn => 
+                    !searchTerm.trim() || 
+                    conn.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((user) => renderUserCard(user, true))
+              ) : (
+                <div className="text-center p-8 text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p className="font-medium mb-1">No connections yet</p>
+                  <p className="text-xs">Start by finding people to connect with</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Pending Requests Tab */}
+          <TabsContent value="requests" className="space-y-4">
+            <div className="max-h-96 overflow-y-auto space-y-2">
+              {pendingRequests.length > 0 ? (
+                pendingRequests.map((request: any) => {
+                  const isReceived = request.recipient?.id !== request.requester?.id;
+                  const otherUser = isReceived ? request.requester : request.recipient;
+                  
+                  return (
+                    <div key={request.id} className="flex items-center justify-between p-3 border rounded-lg bg-muted/30">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={otherUser?.avatar_url} alt={otherUser?.full_name} />
+                          <AvatarFallback>
+                            {otherUser?.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-sm">{otherUser?.full_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {isReceived ? 'Sent you a connection request' : 'Waiting for response'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        {isReceived ? (
+                          <>
+                            <Button
+                              size="sm"
+                              onClick={() => handleAcceptRequest(request.id)}
+                              className="text-xs gap-1"
+                            >
+                              <UserCheck className="h-3 w-3" />
+                              Accept
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleRejectRequest(request.id)}
+                              className="text-xs gap-1"
+                            >
+                              <UserX className="h-3 w-3" />
+                              Reject
+                            </Button>
+                          </>
+                        ) : (
+                          <Badge variant="outline" className="text-xs">Pending</Badge>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })
+              ) : (
+                <div className="text-center p-8 text-muted-foreground">
+                  <UserPlus className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p className="font-medium mb-1">No pending requests</p>
+                  <p className="text-xs">Connection requests will appear here</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
 
-                {/* People You May Know Section */}
-                {searchResults.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-muted-foreground px-1">
-                      People you may know
-                    </h4>
-                    <div className="space-y-2">
-                      {searchResults.map((user) => renderUserCard(user, false))}
-                    </div>
-                  </div>
-                )}
+          {/* Search/Find People Tab */}
+          <TabsContent value="search" className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search for people to connect..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
 
-                {/* Empty States */}
-                {!searching && connectionResults.length === 0 && searchResults.length === 0 && (
-                  <div className="text-center p-4 text-muted-foreground">
-                    {searchTerm.trim() ? (
-                      <div>
-                        <p className="font-medium mb-1">No users found</p>
-                        <p className="text-xs">No users found matching "{searchTerm}"</p>
-                      </div>
-                    ) : connections.length === 0 ? (
-                      <div>
-                        <p className="font-medium mb-1">No connections yet</p>
-                        <p className="text-xs">Search for users to find people to connect with</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="font-medium mb-1">Suggested connections</p>
-                        <p className="text-xs">Search for users to find more people to connect with</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
+            <div className="max-h-96 overflow-y-auto space-y-2">
+              {searching ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+              ) : searchResults.length > 0 ? (
+                searchResults.map((user) => renderUserCard(user, false))
+              ) : (
+                <div className="text-center p-8 text-muted-foreground">
+                  <Search className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p className="font-medium mb-1">
+                    {searchTerm.trim() ? 'No users found' : 'Start searching'}
+                  </p>
+                  <p className="text-xs">
+                    {searchTerm.trim() 
+                      ? `No users found matching "${searchTerm}"` 
+                      : 'Enter a name to find people to connect with'}
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
