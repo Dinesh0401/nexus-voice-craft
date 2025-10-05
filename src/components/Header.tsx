@@ -61,18 +61,18 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8">
           {/* Enhanced Logo Section */}
           <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
-            <div className="flex items-center gap-3 md:gap-4 rounded-xl bg-slate-50 mx-0 px-0 my-0 py-0">
+            <div className="flex items-center gap-4 md:gap-5 rounded-xl bg-slate-50 mx-0 px-0 my-0 py-0">
               <div className="relative">
-                <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-14 md:h-16 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
+                <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-20 md:h-24 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent leading-tight">
+                <span className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent leading-tight glow-text">
                   Knowledge
                 </span>
-                <span className="text-base md:text-lg font-semibold text-foreground/80">
+                <span className="text-lg md:text-xl font-semibold text-foreground/80">
                   Institute of Technology
                 </span>
-                <span className="flex items-center gap-1 text-xs md:text-sm text-primary font-medium mt-0.5">
+                <span className="flex items-center gap-1 text-sm md:text-base text-primary font-medium mt-0.5">
                   <span>🎓</span> Alumni Association
                 </span>
               </div>
