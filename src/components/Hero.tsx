@@ -42,9 +42,9 @@ const Hero = () => {
   };
 
   return (
-    <section className="bg-emerald-50">
+    <section className="bg-gradient-to-br from-muted via-background to-muted">
       {/* Hero carousel */}
-      <div className="w-full">
+      <div className="w-full shadow-xl">
         <Carousel className="w-full relative">
           <CarouselContent>
             {heroImages.map((image, index) => (
@@ -53,9 +53,9 @@ const Hero = () => {
                   <img 
                     src={image.src} 
                     alt={image.alt} 
-                    className="w-full h-[500px] object-cover" 
+                    className="w-full h-[450px] md:h-[550px] object-cover" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                   <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-lg text-sm font-semibold">
                     {index + 1}/{heroImages.length}
                   </div>
@@ -73,7 +73,7 @@ const Hero = () => {
         <TextReveal 
           variant="slideUp" 
           delay={0.2}
-          className="text-4xl md:text-5xl font-bold text-center text-green-800 mb-12 block"
+          className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent mb-12 block"
         >
           Our Mission
         </TextReveal>
@@ -94,7 +94,7 @@ const Hero = () => {
           <AnimatedButton
             animation="pulse"
             size="lg"
-            className="bg-primary text-white text-lg px-8 py-6 rounded-lg flex items-center"
+            className="gradient-button text-white text-lg px-10 py-6 rounded-xl flex items-center font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
             onClick={handleJoinCommunity}
           >
             Join our community today

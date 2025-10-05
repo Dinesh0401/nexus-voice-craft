@@ -69,9 +69,9 @@ export const AISmartRecommendations = () => {
       ]);
 
       setRecommendations({
-        alumni: alumniRec.recommendations || alumniRec.advice || '',
-        mentors: mentorRec.suggestions || mentorRec.advice || '',
-        events: eventRec.recommendations || eventRec.advice || '',
+        alumni: (alumniRec as any).recommendations || (alumniRec as any).advice || '',
+        mentors: (mentorRec as any).suggestions || (mentorRec as any).advice || '',
+        events: (eventRec as any).recommendations || (eventRec as any).advice || '',
       });
     } catch (error) {
       console.error('Error loading recommendations:', error);

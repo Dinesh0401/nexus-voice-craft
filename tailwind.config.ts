@@ -53,6 +53,9 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				nexus: {
+					primary: 'hsl(167 70% 42%)',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

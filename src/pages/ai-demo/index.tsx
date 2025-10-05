@@ -39,7 +39,7 @@ const AIDemoPage = () => {
         currentRole: 'Student',
         interests: ['Technology', 'Innovation'],
       });
-      setCareerAdvice(response.advice);
+      setCareerAdvice((response as any).advice || '');
     } catch (error) {
       toast({
         title: 'Error',
@@ -61,7 +61,7 @@ const AIDemoPage = () => {
         experience: 'Entry Level',
         bio: 'Passionate about software development and AI',
       });
-      setProfileAnalysis(response.analysis);
+      setProfileAnalysis((response as any).analysis || '');
     } catch (error) {
       toast({
         title: 'Error',

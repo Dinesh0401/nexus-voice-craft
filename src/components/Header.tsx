@@ -39,9 +39,9 @@ const Header = () => {
   React.useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
-  return <header className="border-b border-gray-200 shadow-sm mx-0 bg-green-50">
+  return <header className="shadow-lg">
       {/* Top Contact Bar */}
-      <div className="bg-gradient-to-r from-nexus-primary to-blue-700 py-2.5 px-4 text-xs md:text-sm text-white font-medium">
+      <div className="gradient-header py-3 px-4 text-xs md:text-sm text-white font-medium shadow-md">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
           <div className="flex flex-wrap gap-x-6 gap-y-1">
             <span className="flex items-center hover:text-yellow-300 transition-colors cursor-pointer">
@@ -57,33 +57,30 @@ const Header = () => {
       </div>
       
       {/* Main Header */}
-      <div className="max-w-7xl flex items-center justify-between py-6 px-4 md:px-8 rounded bg-emerald-50 mx-0">
-        {/* Enhanced Logo Section */}
-        <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-16 md:h-20 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-nexus-primary/5 to-blue-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-            <div className="flex flex-col space-y-1">
-              <span className="text-2xl md:text-3xl font-display font-bold bg-gradient-to-r from-nexus-primary via-blue-700 to-blue-900 bg-clip-text text-transparent leading-tight tracking-tight">
-                Knowledge
-              </span>
-              <span className="text-lg md:text-xl font-display font-bold bg-gradient-to-r from-gray-700 via-gray-800 to-nexus-primary bg-clip-text text-transparent tracking-wide drop-shadow-sm relative">
-                Institute of Technology
-                <div className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-gradient-to-r from-nexus-primary/60 via-blue-500/60 to-transparent rounded-full"></div>
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-green-600 text-sm font-semibold bg-gradient-to-r from-green-50 to-emerald-50 px-3 py-1.5 rounded-full border border-green-200 shadow-sm">
-                  🎓 Alumni Association
+      <div className="bg-white border-b border-border">
+        <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8">
+          {/* Enhanced Logo Section */}
+          <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="relative">
+                <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-14 md:h-16 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent leading-tight">
+                  Knowledge
+                </span>
+                <span className="text-base md:text-lg font-semibold text-foreground/80">
+                  Institute of Technology
+                </span>
+                <span className="flex items-center gap-1 text-xs md:text-sm text-primary font-medium mt-0.5">
+                  <span>🎓</span> Alumni Association
                 </span>
               </div>
             </div>
-          </div>
-        </Link>
+          </Link>
         
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center space-x-3">
           {isAuthenticated && user ? <div className="flex items-center gap-3">
               {/* Notifications */}
               <DropdownMenu>
@@ -172,21 +169,22 @@ const Header = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div> : <div className="flex items-center gap-3">
-              <AuthDialog triggerText="JOIN AS STUDENT" triggerClassName="bg-gradient-to-r from-nexus-primary to-blue-600 hover:from-nexus-primary/90 hover:to-blue-600/90 text-white font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105" defaultTab="register" />
-              <AuthDialog triggerText="JOIN AS ALUMNI" triggerClassName="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-blue-900 font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105" defaultTab="register" />
-              <AuthDialog triggerText="LOGIN" triggerClassName="border-2 border-nexus-primary text-nexus-primary hover:bg-nexus-primary hover:text-white font-medium px-4 py-2.5 rounded-lg transition-all duration-200 hover:scale-105" defaultTab="login" />
+            </div> : <div className="flex items-center gap-2">
+              <AuthDialog triggerText="JOIN AS STUDENT" triggerClassName="gradient-button text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:brightness-110" defaultTab="register" />
+              <AuthDialog triggerText="JOIN AS ALUMNI" triggerClassName="gradient-accent text-gray-900 font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:brightness-110" defaultTab="register" />
+              <AuthDialog triggerText="LOGIN" triggerClassName="bg-primary text-primary-foreground font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:brightness-110" defaultTab="login" />
             </div>}
         </div>
         
-        {/* Mobile Menu Button */}
-        <button className="md:hidden text-gray-600 hover:text-nexus-primary p-2 rounded-lg hover:bg-nexus-primary/10 transition-all duration-200" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <Menu className="h-6 w-6" />
-        </button>
+          {/* Mobile Menu Button */}
+          <button className="md:hidden text-foreground hover:text-primary p-2 rounded-lg hover:bg-muted transition-all duration-200" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <Menu className="h-6 w-6" />
+          </button>
+        </div>
       </div>
       
       {/* Navigation */}
-      <div className="bg-gradient-to-r from-nexus-primary via-blue-700 to-nexus-primary text-white shadow-lg">
+      <div className="gradient-primary text-white shadow-lg">
         <div className="max-w-7xl mx-auto">
           <DesktopNav isActive={isActive} />
           <MobileNav isOpen={isMenuOpen} user={user} isAuthenticated={isAuthenticated} handleLogout={handleLogout} navigate={navigate} isActive={isActive} />
