@@ -101,7 +101,7 @@ const Events = () => {
         </div>
         
         {/* Featured Events */}
-        {featuredEvents.length > 0 && <div className="mb-12 bg-lime-50">
+        {featuredEvents.length > 0 && <div className="mb-12 bg-gray-100">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Star className="h-5 w-5 text-yellow-500 mr-2" />
               Featured Events

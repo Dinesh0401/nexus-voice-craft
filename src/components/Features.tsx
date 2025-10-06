@@ -38,7 +38,7 @@ const Features = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 mx-0 px-[28px]">
           <TextReveal variant="slideUp" className="text-4xl md:text-5xl font-bold font-display mb-6 bg-gradient-to-r from-ai-primary via-ai-secondary to-ai-accent bg-clip-text text-transparent block">
             How alumNexus helps you succeed
           </TextReveal>
