@@ -20,17 +20,18 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
+  const [allUsers, setAllUsers] = useState<UserSearchResult[]>([]);
   const [connectionResults, setConnectionResults] = useState<UserSearchResult[]>([]);
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   
-  const { connections, searchUsers, sendConnectionRequest } = useConnections();
+  const { connections, getAllUsers, searchUsers, sendConnectionRequest } = useConnections();
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Load all connections and pending requests when dialog opens
+  // Load all connections, pending requests, and all users when dialog opens
   useEffect(() => {
     const loadConnections = async () => {
       if (!open) return;
@@ -55,6 +56,10 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
       
       setConnectionResults(allConnections);
       
+      // Load all users for "Find People" tab
+      const users = await getAllUsers();
+      setAllUsers(users);
+      
       // Load pending requests
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
@@ -75,7 +80,7 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
     };
     
     loadConnections();
-  }, [open, connections]);
+  }, [open, connections, getAllUsers]);
 
   useEffect(() => {
     const performSearch = async () => {
@@ -296,29 +301,33 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
   };
 
   const renderUserCard = (user: UserSearchResult, showMessageButton: boolean = false) => (
-    <div key={user.id} className="flex items-center justify-between p-3 border rounded-lg">
-      <div className="flex items-center gap-3">
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={user.avatar_url} alt={user.full_name} />
-          <AvatarFallback>
-            {user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div>
+    <div key={user.id} className="flex items-start justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+      <div className="flex items-start gap-3 flex-1 min-w-0">
+        <div className="relative shrink-0">
+          <Avatar className="h-12 w-12">
+            <AvatarImage src={user.avatar_url} alt={user.full_name} />
+            <AvatarFallback>
+              {user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          {user.is_online && (
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
           <p className="font-medium text-sm">{user.full_name}</p>
           {user.username && (
             <p className="text-xs text-muted-foreground">@{user.username}</p>
           )}
-          <div className="flex items-center gap-2 mt-1">
-            <div className={`w-2 h-2 rounded-full ${user.is_online ? 'bg-green-500' : 'bg-gray-300'}`} />
-            <span className="text-xs text-muted-foreground">
-              {user.is_online ? 'Online' : 'Offline'}
-            </span>
-          </div>
+          {user.bio && (
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              {user.bio}
+            </p>
+          )}
         </div>
       </div>
       
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 ml-2 shrink-0">
         {getConnectionStatusBadge(user.connection_status)}
         {showMessageButton && user.connection_status === 'accepted' && (
           <Button
@@ -334,7 +343,6 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
         {user.connection_status === 'none' && (
           <Button
             size="sm"
-            variant="outline"
             onClick={() => handleSendRequest(user.id)}
             className="text-xs"
           >
@@ -491,18 +499,20 @@ const AddConnectionDialog: React.FC<AddConnectionDialogProps> = ({ trigger }) =>
                 <div className="flex items-center justify-center p-8">
                   <Loader2 className="h-6 w-6 animate-spin" />
                 </div>
-              ) : searchResults.length > 0 ? (
+              ) : searchTerm.trim() && searchResults.length > 0 ? (
                 searchResults.map((user) => renderUserCard(user, false))
+              ) : !searchTerm.trim() && allUsers.length > 0 ? (
+                allUsers.map((user) => renderUserCard(user, false))
               ) : (
                 <div className="text-center p-8 text-muted-foreground">
                   <Search className="h-12 w-12 mx-auto mb-3 opacity-50" />
                   <p className="font-medium mb-1">
-                    {searchTerm.trim() ? 'No users found' : 'Start searching'}
+                    {searchTerm.trim() ? 'No users found' : 'No users available'}
                   </p>
                   <p className="text-xs">
                     {searchTerm.trim() 
                       ? `No users found matching "${searchTerm}"` 
-                      : 'Enter a name to find people to connect with'}
+                      : 'Check back later for new members'}
                   </p>
                 </div>
               )}

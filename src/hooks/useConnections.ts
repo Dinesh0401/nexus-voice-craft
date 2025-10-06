@@ -25,6 +25,7 @@ export interface UserSearchResult {
   avatar_url: string;
   username: string;
   is_online: boolean;
+  bio?: string;
   connection_status?: 'none' | 'pending' | 'accepted';
 }
 
@@ -101,18 +102,18 @@ export const useConnections = () => {
     }
   }, [toast]);
 
-  const searchUsers = useCallback(async (searchTerm: string): Promise<UserSearchResult[]> => {
+  const getAllUsers = useCallback(async (): Promise<UserSearchResult[]> => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user || !searchTerm.trim()) return [];
+      if (!user) return [];
 
-      // Search for users by name or username
+      // Get all users with their profiles
       const { data: usersData, error: usersError } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, username, is_online')
+        .select('id, full_name, avatar_url, username, is_online, bio')
         .neq('id', user.id) // Exclude current user
-        .or(`full_name.ilike.%${searchTerm}%,username.ilike.%${searchTerm}%`)
-        .limit(10);
+        .order('is_online', { ascending: false })
+        .order('full_name', { ascending: true });
 
       if (usersError) throw usersError;
 
@@ -137,6 +138,61 @@ export const useConnections = () => {
           avatar_url: profile.avatar_url || '',
           username: profile.username || '',
           is_online: profile.is_online || false,
+          bio: (profile as any).bio || '',
+          connection_status: connection?.status === 'accepted' ? 'accepted' : 
+                           connection?.status === 'pending' ? 'pending' : 'none'
+        };
+      }) || [];
+
+      return results;
+    } catch (error) {
+      console.error('Error loading users:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load users",
+        variant: "destructive",
+      });
+      return [];
+    }
+  }, [toast]);
+
+  const searchUsers = useCallback(async (searchTerm: string): Promise<UserSearchResult[]> => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !searchTerm.trim()) return [];
+
+      // Search for users by name or username
+      const { data: usersData, error: usersError } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url, username, is_online, bio')
+        .neq('id', user.id) // Exclude current user
+        .or(`full_name.ilike.%${searchTerm}%,username.ilike.%${searchTerm}%`)
+        .limit(20);
+
+      if (usersError) throw usersError;
+
+      // Check connection status for each user
+      const userIds = usersData?.map(u => u.id) || [];
+      const { data: connectionsData } = await supabase
+        .from('connections')
+        .select('recipient_id, requester_id, status')
+        .or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`)
+        .in('requester_id', [...userIds, user.id])
+        .in('recipient_id', [...userIds, user.id]);
+
+      const results: UserSearchResult[] = usersData?.map(profile => {
+        const connection = connectionsData?.find(c => 
+          (c.requester_id === user.id && c.recipient_id === profile.id) ||
+          (c.recipient_id === user.id && c.requester_id === profile.id)
+        );
+
+        return {
+          id: profile.id,
+          full_name: profile.full_name || 'Unknown User',
+          avatar_url: profile.avatar_url || '',
+          username: profile.username || '',
+          is_online: profile.is_online || false,
+          bio: (profile as any).bio || '',
           connection_status: connection?.status === 'accepted' ? 'accepted' : 
                            connection?.status === 'pending' ? 'pending' : 'none'
         };
@@ -280,6 +336,7 @@ export const useConnections = () => {
     connections,
     connectionRequests,
     loading,
+    getAllUsers,
     searchUsers,
     sendConnectionRequest,
     acceptConnectionRequest,

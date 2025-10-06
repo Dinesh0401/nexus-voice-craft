@@ -9,36 +9,79 @@ import { Alumni, getRecommendedAlumni } from '@/data/alumni';
 import { getCurrentStudent } from '@/data/students';
 import { useToast } from '@/hooks/use-toast';
 import { useInterval } from '@/hooks/useInterval';
+import { useConnections } from '@/hooks/useConnections';
+import { supabase } from '@/integrations/supabase/client';
 const AIPersonalizedConnections = () => {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const { sendConnectionRequest } = useConnections();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [realUsers, setRealUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const currentStudent = getCurrentStudent();
   const recommendedAlumni = getRecommendedAlumni(currentStudent, 6);
 
+  // Load real users from database
+  useEffect(() => {
+    const loadUsers = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      const { data: users } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url, bio, username')
+        .neq('id', user.id)
+        .limit(6);
+
+      if (users && users.length > 0) {
+        setRealUsers(users);
+      }
+      setLoading(false);
+    };
+
+    loadUsers();
+  }, []);
+
   // Auto-rotate every 1 second
   useInterval(() => {
-    if (isPlaying && recommendedAlumni.length > 1) {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % recommendedAlumni.length);
+    if (isPlaying && displayUsers.length > 1) {
+      setCurrentIndex(prevIndex => (prevIndex + 1) % displayUsers.length);
     }
   }, 1000);
-  const handleContactClick = (alumni: Alumni) => {
+  const handleContactClick = async (userId: string, userName: string) => {
+    await sendConnectionRequest(userId);
     toast({
-      title: "AI-Powered Connection Request Sent! 🤖",
-      description: `Smart matching has connected you with ${alumni.name}. They'll respond shortly.`
+      title: "Connection Request Sent! 🤖",
+      description: `Your connection request has been sent to ${userName}.`
     });
   };
   const viewAlumniDirectory = () => {
     navigate('/alumni');
   };
-  if (recommendedAlumni.length === 0) {
+  const displayUsers = realUsers.length > 0 ? realUsers : recommendedAlumni;
+  
+  if (loading || displayUsers.length === 0) {
     return null;
   }
-  const currentAlumni = recommendedAlumni[currentIndex];
+
+  const currentItem = displayUsers[currentIndex];
   const matchPercentage = Math.floor(Math.random() * 20) + 80; // 80-99% match
+  
+  // Map user to alumni-like structure for display
+  const currentAlumni = realUsers.length > 0 ? {
+    id: currentItem.id,
+    name: currentItem.full_name,
+    avatar: currentItem.avatar_url || '/placeholder.svg',
+    bio: currentItem.bio || 'No bio available',
+    role: 'Member',
+    company: 'Alumni Network',
+    location: 'Network Member',
+    expertiseTags: []
+  } : currentItem;
 
   return <div className="relative bg-gradient-to-br from-ai-surface/30 to-ai-accent/10 p-8 border border-ai-border backdrop-blur-sm rounded-3xl bg-teal-50">
       {/* AI Badge */}
@@ -64,7 +107,7 @@ const AIPersonalizedConnections = () => {
 
       {/* Progress indicators */}
       <div className="flex gap-1 mb-6">
-        {recommendedAlumni.map((_, index) => <div key={index} className={`h-1 flex-1 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-gradient-to-r from-ai-primary to-ai-secondary' : 'bg-muted'}`} />)}
+        {displayUsers.map((_, index) => <div key={index} className={`h-1 flex-1 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-gradient-to-r from-ai-primary to-ai-secondary' : 'bg-muted'}`} />)}
       </div>
 
       {/* Alumni Card with AnimatePresence */}
@@ -136,7 +179,13 @@ const AIPersonalizedConnections = () => {
                   </div>}
 
                 {/* Connect Button */}
-                <Button onClick={() => handleContactClick(currentAlumni)} className="w-full bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-ai-glow">
+                <Button 
+                  onClick={() => handleContactClick(
+                    realUsers.length > 0 ? currentItem.id : currentAlumni.id,
+                    currentAlumni.name
+                  )} 
+                  className="w-full bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-ai-glow"
+                >
                   <Zap className="w-4 h-4 mr-2" />
                   Smart Connect
                 </Button>

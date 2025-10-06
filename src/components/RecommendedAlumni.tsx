@@ -6,20 +6,23 @@ import { Briefcase, MapPin, ChevronRight } from 'lucide-react';
 import { Alumni, getRecommendedAlumni } from '@/data/alumni';
 import { getCurrentStudent } from '@/data/students';
 import { useToast } from '@/hooks/use-toast';
+import { useConnections } from '@/hooks/useConnections';
 const RecommendedAlumni = () => {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const { sendConnectionRequest } = useConnections();
   const currentStudent = getCurrentStudent();
   const recommendedAlumni = getRecommendedAlumni(currentStudent, 3);
+  
   const viewAlumniDirectory = () => {
     navigate('/alumni');
   };
-  const handleContactClick = (alumni: Alumni) => {
+  
+  const handleContactClick = async (alumniId: string, alumniName: string) => {
+    await sendConnectionRequest(alumniId);
     toast({
-      title: "Contact request sent!",
-      description: `Your message has been sent to ${alumni.name}. They'll respond shortly.`
+      title: "Connection request sent!",
+      description: `Your connection request has been sent to ${alumniName}.`
     });
   };
   if (recommendedAlumni.length === 0) {
@@ -70,7 +73,10 @@ const RecommendedAlumni = () => {
             </CardContent>
             
             <CardFooter className="bg-gray-50 p-4">
-              <Button onClick={() => handleContactClick(alumni)} className="w-full bg-nexus-primary hover:bg-nexus-primary/90 mx-[9px] px-[22px] py-[11px] my-0">
+              <Button 
+                onClick={() => handleContactClick(alumni.id, alumni.name)} 
+                className="w-full bg-nexus-primary hover:bg-nexus-primary/90 mx-[9px] px-[22px] py-[11px] my-0"
+              >
                 Connect Now
               </Button>
             </CardFooter>

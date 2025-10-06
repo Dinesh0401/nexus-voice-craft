@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { showSuccessToast } from './SuccessToast';
 import CareerJourney from './CareerJourney';
+import { useConnections } from '@/hooks/useConnections';
 
 interface AlumniCardProps {
   alumni: Alumni;
@@ -22,15 +23,18 @@ interface AlumniCardProps {
 
 const AlumniCard = ({ alumni }: AlumniCardProps) => {
   const [expanded, setExpanded] = useState(false);
+  const { sendConnectionRequest } = useConnections();
   
-  const handleContactClick = () => {
+  const handleContactClick = async () => {
+    await sendConnectionRequest(alumni.id);
     showSuccessToast({ 
-      message: `Contact request sent to ${alumni.name}!`, 
+      message: `Connection request sent to ${alumni.name}!`, 
       emoji: '📧' 
     });
   };
 
-  const handleMentorshipClick = () => {
+  const handleMentorshipClick = async () => {
+    await sendConnectionRequest(alumni.id);
     showSuccessToast({ 
       message: `Mentorship request sent to ${alumni.name}!`, 
       emoji: '🎓' 
