@@ -30,7 +30,7 @@ const CallToAction = () => {
           <Button className="bg-white text-nexus-primary hover:bg-gray-100 text-lg px-8 py-6" onClick={handleStudentJoin}>
             Join as a Student
           </Button>
-          <Button variant="outline" onClick={handleAlumniJoin} className="border-white hover:bg-white/10 px-8 py-6 text-lg text-green-50">
+          <Button variant="outline" onClick={handleAlumniJoin} className="border-white px-8 py-6 text-lg bg-zinc-100 text-green-600 text-center">
             Join as an Alumni
           </Button>
         </div>

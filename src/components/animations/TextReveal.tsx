@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-
 interface TextRevealProps {
   children: string;
   className?: string;
@@ -10,18 +8,18 @@ interface TextRevealProps {
   duration?: number;
   variant?: 'slideUp' | 'fadeIn' | 'typewriter' | 'wave';
 }
-
-const TextReveal: React.FC<TextRevealProps> = ({ 
-  children, 
-  className, 
+const TextReveal: React.FC<TextRevealProps> = ({
+  children,
+  className,
   delay = 0,
   duration = 0.8,
   variant = 'slideUp'
 }) => {
   const words = children.split(' ');
-
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: {
+      opacity: 0
+    },
     visible: {
       opacity: 1,
       transition: {
@@ -30,24 +28,40 @@ const TextReveal: React.FC<TextRevealProps> = ({
       }
     }
   };
-
   const itemVariants = {
     slideUp: {
-      hidden: { y: 20, opacity: 0 },
-      visible: { y: 0, opacity: 1 }
+      hidden: {
+        y: 20,
+        opacity: 0
+      },
+      visible: {
+        y: 0,
+        opacity: 1
+      }
     },
     fadeIn: {
-      hidden: { opacity: 0 },
-      visible: { opacity: 1 }
+      hidden: {
+        opacity: 0
+      },
+      visible: {
+        opacity: 1
+      }
     },
     typewriter: {
-      hidden: { opacity: 0 },
-      visible: { opacity: 1 }
+      hidden: {
+        opacity: 0
+      },
+      visible: {
+        opacity: 1
+      }
     },
     wave: {
-      hidden: { y: 20, opacity: 0 },
-      visible: { 
-        y: 0, 
+      hidden: {
+        y: 20,
+        opacity: 0
+      },
+      visible: {
+        y: 0,
         opacity: 1,
         transition: {
           type: 'spring',
@@ -57,46 +71,17 @@ const TextReveal: React.FC<TextRevealProps> = ({
       }
     }
   };
-
   if (variant === 'typewriter') {
-    return (
-      <motion.span
-        className={cn("inline-block", className)}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {children.split('').map((char, index) => (
-          <motion.span
-            key={index}
-            variants={itemVariants[variant]}
-            className="inline-block"
-          >
+    return <motion.span className={cn("inline-block", className)} variants={containerVariants} initial="hidden" animate="visible">
+        {children.split('').map((char, index) => <motion.span key={index} variants={itemVariants[variant]} className="inline-block">
             {char === ' ' ? '\u00A0' : char}
-          </motion.span>
-        ))}
-      </motion.span>
-    );
+          </motion.span>)}
+      </motion.span>;
   }
-
-  return (
-    <motion.span
-      className={cn("inline-block", className)}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {words.map((word, index) => (
-        <motion.span
-          key={index}
-          variants={itemVariants[variant]}
-          className="inline-block mr-1"
-        >
+  return <motion.span className={cn("inline-block", className)} variants={containerVariants} initial="hidden" animate="visible">
+      {words.map((word, index) => <motion.span key={index} variants={itemVariants[variant]} className="inline-block mr-1 text-green-300 text-center font-semibold mx-[168px]">
           {word}
-        </motion.span>
-      ))}
-    </motion.span>
-  );
+        </motion.span>)}
+    </motion.span>;
 };
-
 export default TextReveal;

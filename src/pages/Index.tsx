@@ -39,10 +39,10 @@ const Index = () => {
         <main className="flex-grow">
           <Hero />
           <StatisticsCounter />
-          <div className="container mx-auto px-4 py-8">
+          <div className="container mx-auto px-4 py-8 bg-neutral-50">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
-              <div className="flex justify-center">
+              <div className="flex justify-center bg-gray-50">
                 <div className="w-full max-w-4xl">
                   <AIPersonalizedConnections />
                 </div>

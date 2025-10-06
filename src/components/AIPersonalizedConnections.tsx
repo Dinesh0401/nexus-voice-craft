@@ -9,43 +9,38 @@ import { Alumni, getRecommendedAlumni } from '@/data/alumni';
 import { getCurrentStudent } from '@/data/students';
 import { useToast } from '@/hooks/use-toast';
 import { useInterval } from '@/hooks/useInterval';
-
 const AIPersonalizedConnections = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-
   const currentStudent = getCurrentStudent();
   const recommendedAlumni = getRecommendedAlumni(currentStudent, 6);
 
   // Auto-rotate every 1 second
   useInterval(() => {
     if (isPlaying && recommendedAlumni.length > 1) {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % recommendedAlumni.length);
+      setCurrentIndex(prevIndex => (prevIndex + 1) % recommendedAlumni.length);
     }
   }, 1000);
-
   const handleContactClick = (alumni: Alumni) => {
     toast({
       title: "AI-Powered Connection Request Sent! 🤖",
       description: `Smart matching has connected you with ${alumni.name}. They'll respond shortly.`
     });
   };
-
   const viewAlumniDirectory = () => {
     navigate('/alumni');
   };
-
   if (recommendedAlumni.length === 0) {
     return null;
   }
-
   const currentAlumni = recommendedAlumni[currentIndex];
   const matchPercentage = Math.floor(Math.random() * 20) + 80; // 80-99% match
 
-  return (
-    <div className="relative bg-gradient-to-br from-ai-surface/30 to-ai-accent/10 rounded-3xl p-8 border border-ai-border backdrop-blur-sm">
+  return <div className="relative bg-gradient-to-br from-ai-surface/30 to-ai-accent/10 p-8 border border-ai-border backdrop-blur-sm rounded-3xl bg-teal-50">
       {/* AI Badge */}
       <div className="absolute -top-3 left-6">
         <Badge className="bg-gradient-to-r from-ai-primary to-ai-secondary text-white px-4 py-1 shadow-ai-glow">
@@ -61,11 +56,7 @@ const AIPersonalizedConnections = () => {
           </h2>
           <p className="text-muted-foreground">AI-curated matches based on your profile</p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={viewAlumniDirectory} 
-          className="flex items-center gap-2 border-ai-border hover:bg-ai-surface"
-        >
+        <Button variant="outline" onClick={viewAlumniDirectory} className="flex items-center gap-2 border-ai-border hover:bg-ai-surface">
           View All
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -73,31 +64,27 @@ const AIPersonalizedConnections = () => {
 
       {/* Progress indicators */}
       <div className="flex gap-1 mb-6">
-        {recommendedAlumni.map((_, index) => (
-          <div
-            key={index}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? 'bg-gradient-to-r from-ai-primary to-ai-secondary' 
-                : 'bg-muted'
-            }`}
-          />
-        ))}
+        {recommendedAlumni.map((_, index) => <div key={index} className={`h-1 flex-1 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-gradient-to-r from-ai-primary to-ai-secondary' : 'bg-muted'}`} />)}
       </div>
 
       {/* Alumni Card with AnimatePresence */}
       <div className="relative h-64">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
+          <motion.div key={currentIndex} initial={{
+          opacity: 0,
+          x: 20
+        }} animate={{
+          opacity: 1,
+          x: 0
+        }} exit={{
+          opacity: 0,
+          x: -20
+        }} transition={{
+          duration: 0.4,
+          ease: "easeInOut"
+        }} className="absolute inset-0">
             <Card className="h-full border-2 border-ai-border bg-gradient-to-br from-background to-ai-surface shadow-ai-soft">
-              <CardContent className="p-6 h-full flex flex-col">
+              <CardContent className="p-6 h-full flex flex-col bg-emerald-50">
                 {/* Match Score */}
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
@@ -114,14 +101,15 @@ const AIPersonalizedConnections = () => {
 
                 {/* Alumni Info */}
                 <div className="flex items-start gap-4 mb-4">
-                  <motion.img 
-                    src={currentAlumni.avatar} 
-                    alt={currentAlumni.name}
-                    className="w-16 h-16 rounded-2xl object-cover border-2 border-ai-border"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                  />
+                  <motion.img src={currentAlumni.avatar} alt={currentAlumni.name} className="w-16 h-16 rounded-2xl object-cover border-2 border-ai-border" initial={{
+                  scale: 0.8,
+                  opacity: 0
+                }} animate={{
+                  scale: 1,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.1
+                }} />
                   <div className="flex-1">
                     <h3 className="font-bold text-lg">{currentAlumni.name}</h3>
                     <div className="text-sm text-muted-foreground flex items-center gap-1">
@@ -141,25 +129,14 @@ const AIPersonalizedConnections = () => {
                 </p>
 
                 {/* Expertise Tags */}
-                {currentAlumni.expertiseTags && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {currentAlumni.expertiseTags.slice(0, 3).map((tag, index) => (
-                      <Badge 
-                        key={index} 
-                        variant="secondary"
-                        className="text-xs bg-ai-accent/20 text-ai-primary border-ai-border"
-                      >
+                {currentAlumni.expertiseTags && <div className="flex flex-wrap gap-2 mb-4">
+                    {currentAlumni.expertiseTags.slice(0, 3).map((tag, index) => <Badge key={index} variant="secondary" className="text-xs bg-ai-accent/20 text-ai-primary border-ai-border">
                         {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                      </Badge>)}
+                  </div>}
 
                 {/* Connect Button */}
-                <Button 
-                  onClick={() => handleContactClick(currentAlumni)}
-                  className="w-full bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-ai-glow"
-                >
+                <Button onClick={() => handleContactClick(currentAlumni)} className="w-full bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/90 hover:to-ai-secondary/90 text-white shadow-ai-glow">
                   <Zap className="w-4 h-4 mr-2" />
                   Smart Connect
                 </Button>
@@ -171,17 +148,10 @@ const AIPersonalizedConnections = () => {
 
       {/* Play/Pause Controls */}
       <div className="flex justify-center mt-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsPlaying(!isPlaying)}
-          className="text-xs text-muted-foreground hover:text-ai-primary"
-        >
+        <Button variant="ghost" size="sm" onClick={() => setIsPlaying(!isPlaying)} className="text-xs text-muted-foreground hover:text-ai-primary">
           {isPlaying ? 'Pause' : 'Play'} Auto-Rotation
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AIPersonalizedConnections;
