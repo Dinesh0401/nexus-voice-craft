@@ -79,7 +79,7 @@ const TextReveal: React.FC<TextRevealProps> = ({
       </motion.span>;
   }
   return <motion.span className={cn("inline-block", className)} variants={containerVariants} initial="hidden" animate="visible">
-      {words.map((word, index) => <motion.span key={index} variants={itemVariants[variant]} className="inline-block mr-1 text-center font-semibold mx-[10px] text-zinc-800">
+      {words.map((word, index) => <motion.span key={index} variants={itemVariants[variant]} className="inline-block mr-1 font-semibold mx-[10px] text-center text-slate-600">
           {word}
         </motion.span>)}
     </motion.span>;

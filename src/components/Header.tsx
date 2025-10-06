@@ -66,7 +66,7 @@ const Header = () => {
                 <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-20 md:h-24 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text leading-tight glow-text text-transparent text-center font-semibold md:text-6xl">
+                <span className="text-2xl bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text leading-tight glow-text text-transparent text-center mx-0 my-0 px-0 py-0 font-normal md:text-4xl">
                   Knowledge
                 </span>
                 <span className="text-lg md:text-xl font-semibold text-foreground/80">
