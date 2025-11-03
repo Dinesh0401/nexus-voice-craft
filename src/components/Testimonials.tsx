@@ -28,11 +28,19 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="py-16 px-4 md:px-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold font-display mb-4">Success stories from our community</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    <section className="relative py-20 px-4 md:px-8 bg-gradient-to-br from-background via-secondary/5 to-primary/5 overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute top-20 right-10 w-64 h-64 bg-gradient-to-br from-primary/30 to-transparent rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-secondary/30 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+      </div>
+      
+      <div className="relative max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold font-display mb-4 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+            Success stories from our community
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             See how alumNexus has helped students and alumni build meaningful connections and advance their careers.
           </p>
         </div>
@@ -41,21 +49,26 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <div 
               key={index} 
-              className="bg-white rounded-lg p-6 shadow-md relative hover-scale"
+              className="group relative bg-white/80 backdrop-blur-md border border-border/50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
             >
-              <div className="absolute -top-4 -left-4 bg-nexus-primary rounded-full p-2">
-                <Quote className="h-5 w-5 text-white" />
+              <div className="absolute -top-4 -left-4 bg-gradient-to-br from-primary to-secondary rounded-full p-3 shadow-lg group-hover:scale-110 transition-transform">
+                <Quote className="h-6 w-6 text-white" />
               </div>
-              <p className="text-gray-600 mb-6 pt-4">"{testimonial.quote}"</p>
-              <div className="flex items-center">
+              
+              {/* Hover gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
+              
+              <p className="relative text-muted-foreground mb-6 pt-4 leading-relaxed">"{testimonial.quote}"</p>
+              
+              <div className="relative flex items-center">
                 <img 
                   src={testimonial.avatar} 
                   alt={testimonial.name}
-                  className="h-12 w-12 rounded-full mr-4 object-cover"
+                  className="h-14 w-14 rounded-full mr-4 object-cover ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all"
                 />
                 <div>
-                  <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.role}, {testimonial.company}</p>
+                  <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{testimonial.name}</h4>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}, {testimonial.company}</p>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, MessageCircle, Phone, MapPin } from 'lucide-react';
 const Footer = () => {
-  return <footer className="bg-nexus-primary text-white pt-12 pb-6">
+  return <footer className="gradient-header text-white pt-12 pb-6 shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Column 1 - Logo & About */}

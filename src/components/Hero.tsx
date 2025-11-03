@@ -42,9 +42,15 @@ const Hero = () => {
   };
 
   return (
-    <section className="bg-gradient-to-br from-muted via-background to-muted">
+    <section className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/5 overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-secondary/20 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+      </div>
+      
       {/* Hero carousel */}
-      <div className="w-full shadow-xl">
+      <div className="relative w-full shadow-2xl">
         <Carousel className="w-full relative">
           <CarouselContent>
             {heroImages.map((image, index) => (
@@ -69,7 +75,7 @@ const Hero = () => {
       </div>
       
       {/* Mission statement */}
-      <div className="max-w-7xl mx-auto py-16 px-4 md:px-8">
+      <div className="relative max-w-7xl mx-auto py-16 px-4 md:px-8">
         <TextReveal 
           variant="slideUp" 
           delay={0.2}

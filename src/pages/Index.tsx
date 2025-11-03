@@ -33,16 +33,16 @@ const Index = () => {
     });
   }, [toast]);
   return <EnhancedPageTransition>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-primary/5 to-secondary/5">
         <Header />
         
         <main className="flex-grow">
           <Hero />
           <StatisticsCounter />
-          <div className="container mx-auto px-4 py-8 bg-neutral-50">
+          <div className="container mx-auto px-4 py-8">
             {/* Wrap components that use Tooltip with TooltipProvider */}
             <TooltipProvider>
-              <div className="flex justify-center bg-gray-50">
+              <div className="flex justify-center">
                 <div className="w-full max-w-4xl">
                   <AIPersonalizedConnections />
                 </div>

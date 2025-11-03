@@ -90,11 +90,19 @@ const Events = () => {
 
   // Get featured events
   const featuredEvents = events.filter(event => event.featured);
-  return <section className="py-16 px-4 md:px-8 bg-zinc-100">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold font-display mb-4">Events and Programs</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+  return <section className="relative py-20 px-4 md:px-8 bg-gradient-to-br from-background via-accent/5 to-primary/5 overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-accent/40 to-transparent rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-primary/40 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+      </div>
+      
+      <div className="relative max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold font-display mb-4 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+            Events and Programs
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Connect with the alumNexus community through our upcoming events and programs. 
             From mentorship sessions to networking opportunities, there's something for everyone.
           </p>

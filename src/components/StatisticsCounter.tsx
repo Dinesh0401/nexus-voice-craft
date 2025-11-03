@@ -28,11 +28,11 @@ const Statistic: React.FC<StatisticProps> = ({
       return () => controls.stop();
     }
   }, [isInView, value, suffix]);
-  return <div className="text-center">
-      <h3 className="text-4xl md:text-5xl font-bold text-nexus-primary">
+  return <div className="text-center p-6 rounded-2xl transition-all duration-300">
+      <h3 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-lg">
         <span ref={ref}>0</span>
       </h3>
-      <p className="text-sm md:text-base text-gray-600 mt-1">{label}</p>
+      <p className="text-sm md:text-base text-muted-foreground mt-2 font-medium">{label}</p>
     </div>;
 };
 const StatisticsCounter = () => {
@@ -53,8 +53,14 @@ const StatisticsCounter = () => {
     label: 'Annual Events',
     suffix: '+'
   }];
-  return <section className="py-16 bg-stone-50">
-      <div className="container mx-auto">
+  return <section className="relative py-20 bg-gradient-to-br from-background via-primary/10 to-secondary/10 overflow-hidden">
+      {/* Decorative background */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-br from-primary/40 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-secondary/40 to-transparent rounded-full blur-3xl" />
+      </div>
+      
+      <div className="relative container mx-auto">
         <motion.div initial="hidden" whileInView="visible" viewport={{
         once: true,
         amount: 0.5
@@ -70,8 +76,10 @@ const StatisticsCounter = () => {
             opacity: 1,
             y: 0
           }
-        }}>
-              <Statistic {...stat} />
+        }} className="group">
+              <div className="text-center p-6 rounded-2xl bg-white/60 backdrop-blur-md border border-border/50 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <Statistic {...stat} />
+              </div>
             </motion.div>)}
         </motion.div>
       </div>

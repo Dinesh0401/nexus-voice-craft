@@ -39,17 +39,17 @@ const Header = () => {
   React.useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
-  return <header className="shadow-lg">
+  return <header className="shadow-2xl">
       {/* Top Contact Bar */}
       <div className="gradient-header py-3 px-4 text-xs md:text-sm text-white font-medium shadow-md">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
           <div className="flex flex-wrap gap-x-6 gap-y-1">
-            <span className="flex items-center hover:text-yellow-300 transition-colors cursor-pointer">
+            <span className="flex items-center hover:text-accent transition-colors cursor-pointer">
               📞 ALUMNI ADMIN: +91 98947 01234
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hover:text-yellow-300 transition-colors cursor-pointer">
+            <span className="hover:text-accent transition-colors cursor-pointer">
               ✉️ info@kiot.ac.in
             </span>
           </div>
@@ -57,7 +57,7 @@ const Header = () => {
       </div>
       
       {/* Main Header */}
-      <div className="bg-white border-b border-border">
+      <div className="bg-white/95 backdrop-blur-md border-b border-border/50">
         <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8">
           {/* Enhanced Logo Section */}
           <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
@@ -144,7 +144,7 @@ const Header = () => {
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 shadow-lg border-0" align="end" forceMount>
+                <DropdownMenuContent className="w-56 shadow-xl border-0 bg-white" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">{user.fullName || 'User'}</p>
