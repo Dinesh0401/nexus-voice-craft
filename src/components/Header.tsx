@@ -1,30 +1,29 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, Bell, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Menu, Bell, User, Mail, Phone, GraduationCap, Settings, LogOut, LayoutDashboard, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AuthDialog from '@/components/auth/AuthDialog';
 import { useAuth } from '@/hooks/useAuth';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { DesktopNav } from './navigation/DesktopNav';
 import { MobileNav } from './navigation/MobileNav';
-import { Calendar, MessageSquare, UserPlus } from 'lucide-react';
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [showAuthDialog, setShowAuthDialog] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    toast
-  } = useToast();
-  const {
-    user,
-    isAuthenticated,
-    logout
-  } = useAuth();
-  const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  // Mock notifications
+  const notifications = [
+    { id: 1, message: 'New connection request from Dr. Sarah', time: '2 hours ago', read: false },
+    { id: 2, message: 'Your mentorship session is tomorrow', time: '1 day ago', read: false },
+    { id: 3, message: 'New forum reply', time: '2 days ago', read: true },
+  ];
+
   const handleLogout = () => {
     logout();
     toast({
@@ -33,163 +32,175 @@ const Header = () => {
     });
     navigate('/');
   };
+
+  const handleNotificationClick = (id: number) => {
+    console.log('Notification clicked:', id);
+  };
+
   const isActive = (path: string) => {
     return location.pathname === path;
   };
+
   React.useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
-  return <header className="shadow-2xl">
-      {/* Top Contact Bar */}
-      <div className="gradient-header py-3 px-4 text-xs md:text-sm text-white font-medium shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
-          <div className="flex flex-wrap gap-x-6 gap-y-1">
-            <span className="flex items-center hover:text-accent transition-colors cursor-pointer">
-              📞 ALUMNI ADMIN: +91 98947 01234
-            </span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="hover:text-accent transition-colors cursor-pointer">
-              ✉️ info@kiot.ac.in
-            </span>
+
+  return <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      {/* Top Info Bar */}
+      <div className="bg-muted border-b border-border">
+        <div className="container mx-auto px-4 py-2 flex justify-between items-center text-sm text-muted-foreground">
+          <div className="flex items-center gap-6">
+            <a href="mailto:info@kit.edu" className="flex items-center gap-2 hover:text-primary transition-colors">
+              <Mail className="h-4 w-4" />
+              <span className="hidden md:inline">info@kit.edu</span>
+            </a>
+            <a href="tel:+1234567890" className="flex items-center gap-2 hover:text-primary transition-colors">
+              <Phone className="h-4 w-4" />
+              <span className="hidden md:inline">+1 (234) 567-890</span>
+            </a>
           </div>
         </div>
       </div>
-      
+
       {/* Main Header */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-border/50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between py-5 px-4 md:px-8">
-          {/* Enhanced Logo Section */}
-          <Link to="/" className="flex items-center group hover:scale-105 transition-all duration-300 ease-in-out">
-            <div className="flex items-center gap-4 md:gap-5 mx-0 px-0 my-0 py-0 rounded-sm bg-slate-50">
-              <div className="relative">
-                <img src="/lovable-uploads/2f632a9a-d04b-476f-ad3d-4ad3ca35b5e5.png" alt="Knowledge Institute of Technology" className="h-20 md:h-24 w-auto object-contain drop-shadow-lg transition-all duration-300 group-hover:drop-shadow-xl" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-2xl bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text leading-tight glow-text text-transparent text-center mx-0 my-0 px-0 py-0 font-normal md:text-4xl">
-                  Knowledge
-                </span>
-                <span className="text-lg md:text-xl font-semibold text-foreground/80">
-                  Institute of Technology
-                </span>
-                <span className="flex items-center gap-1 text-sm md:text-base text-primary font-medium mt-0.5">
-                  <span>🎓</span> Alumni Association
-                </span>
-              </div>
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo and Brand */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md group-hover:shadow-lg transition-all group-hover:scale-105">
+              <GraduationCap className="h-7 w-7 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-foreground">Knowledge Institute of Technology</h1>
+              <p className="text-xs text-muted-foreground">Alumni Network</p>
             </div>
           </Link>
-        
+
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-3">
-          {isAuthenticated && user ? <div className="flex items-center gap-3">
-              {/* Notifications */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative hover:bg-nexus-primary/10 transition-all duration-200">
-                    <Bell className="h-5 w-5 text-gray-600" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                      3
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80 shadow-lg border-0 bg-white">
-                  <DropdownMenuLabel className="text-nexus-primary font-semibold">Notifications</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {[{
-                  title: "New mentor connection",
-                  description: "Dr. Anand Sharma accepted your request",
-                  time: "2 hours ago",
-                  icon: UserPlus,
-                  iconClass: "text-green-500"
-                }, {
-                  title: "Upcoming mock interview",
-                  description: "Tomorrow at 3:00 PM with Sarah Johnson",
-                  time: "1 day ago",
-                  icon: Calendar,
-                  iconClass: "text-blue-500"
-                }, {
-                  title: "New forum reply",
-                  description: "Someone replied to your post about career advice",
-                  time: "2 days ago",
-                  icon: MessageSquare,
-                  iconClass: "text-purple-500"
-                }].map((notification, index) => <DropdownMenuItem key={index} className="flex items-start py-3 px-4 cursor-pointer hover:bg-nexus-primary/5">
-                      <div className={`rounded-full p-2 ${notification.iconClass} bg-gray-100 mr-3`}>
-                        <notification.icon className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm">{notification.title}</h4>
-                        <p className="text-xs text-gray-500">{notification.description}</p>
-                        <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
-                      </div>
-                    </DropdownMenuItem>)}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="justify-center text-nexus-primary font-medium hover:bg-nexus-primary/10">
-                    View all notifications
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              
-              {/* User Profile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-11 rounded-full flex items-center gap-3 pl-2 pr-4 hover:bg-nexus-primary/10 transition-all duration-200 border border-transparent hover:border-nexus-primary/20">
-                    <Avatar className="h-9 w-9 ring-2 ring-nexus-primary/20">
-                      {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.fullName || 'User'} /> : <AvatarFallback className="bg-gradient-to-br from-nexus-primary to-blue-600 text-white font-semibold">
-                          {user.fullName ? user.fullName.substring(0, 2).toUpperCase() : (user.email || 'U').substring(0, 2).toUpperCase()}
-                        </AvatarFallback>}
-                    </Avatar>
-                    <span className="font-medium text-sm text-gray-700 hidden lg:inline">
-                      {user.fullName ? user.fullName.split(' ')[0] : user.email}
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 shadow-xl border-0 bg-white" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.fullName || 'User'}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? <>
+                {/* Notification Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative hover:bg-muted">
+                      <Bell className="h-5 w-5" />
+                      {notifications.filter(n => !n.read).length > 0 && (
+                        <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full animate-pulse" />
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80 bg-white max-h-96 overflow-y-auto">
+                    <div className="px-4 py-3 border-b">
+                      <h3 className="font-semibold">Notifications</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {notifications.filter(n => !n.read).length} unread
                       </p>
                     </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate('/dashboard')} className="hover:bg-nexus-primary/10">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Dashboard</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/alumni')} className="hover:bg-nexus-primary/10">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>My Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-50 text-red-600">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div> : <div className="flex items-center gap-2">
-              <AuthDialog triggerText="JOIN AS STUDENT" triggerClassName="gradient-button text-white font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:brightness-110" defaultTab="register" />
-              <AuthDialog triggerText="JOIN AS ALUMNI" triggerClassName="gradient-accent text-gray-900 font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:brightness-110" defaultTab="register" />
-              <AuthDialog triggerText="LOGIN" triggerClassName="bg-primary text-primary-foreground font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:brightness-110" defaultTab="login" />
-            </div>}
-        </div>
-        
-          {/* Mobile Menu Button */}
-          <button className="md:hidden text-foreground hover:text-primary p-2 rounded-lg hover:bg-muted transition-all duration-200" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <Menu className="h-6 w-6" />
-          </button>
+                    {notifications.length === 0 ? (
+                      <div className="p-4 text-center text-muted-foreground">
+                        No notifications
+                      </div>
+                    ) : (
+                      notifications.map(notification => (
+                        <DropdownMenuItem 
+                          key={notification.id}
+                          className={`px-4 py-3 cursor-pointer ${!notification.read ? 'bg-muted/50' : ''}`}
+                          onClick={() => handleNotificationClick(notification.id)}
+                        >
+                          <div className="flex gap-3">
+                            <div className={`h-2 w-2 rounded-full mt-2 flex-shrink-0 ${!notification.read ? 'bg-primary' : 'bg-transparent'}`} />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">{notification.message}</p>
+                              <p className="text-xs text-muted-foreground">{notification.time}</p>
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* User Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative hover:bg-muted">
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-white">
+                    <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </> : <>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowAuthDialog(true)}
+                  className="border-primary text-primary hover:bg-primary hover:text-white"
+                >
+                  Join as Student
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => setShowAuthDialog(true)}
+                  className="bg-gradient-to-r from-primary to-secondary text-white hover:opacity-90 shadow-md"
+                >
+                  Login
+                </Button>
+              </>}
+          </div>
+
+            {/* Mobile Menu Button */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden hover:bg-muted" 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
         </div>
       </div>
       
       {/* Navigation */}
-      <div className="gradient-primary text-white shadow-lg">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-gradient-to-r from-primary to-secondary">
+        <div className="container mx-auto">
           <DesktopNav isActive={isActive} />
-          <MobileNav isOpen={isMenuOpen} user={user} isAuthenticated={isAuthenticated} handleLogout={handleLogout} navigate={navigate} isActive={isActive} />
+          <MobileNav 
+            isOpen={isMenuOpen} 
+            user={user} 
+            isAuthenticated={isAuthenticated} 
+            handleLogout={handleLogout} 
+            navigate={navigate} 
+            isActive={isActive} 
+          />
         </div>
       </div>
+
+      {/* Auth Dialog */}
+      {showAuthDialog && (
+        <AuthDialog 
+          triggerText="" 
+          triggerClassName="hidden"
+          defaultTab="login"
+        />
+      )}
     </header>;
 };
+
 export default Header;

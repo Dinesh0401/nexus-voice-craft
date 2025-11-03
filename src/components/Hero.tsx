@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import { showSuccessToast } from '@/components/SuccessToast';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import AnimatedButton from '@/components/animations/AnimatedButton';
-import TextReveal from '@/components/animations/TextReveal';
+import { ArrowRight, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroImages = [
     {
@@ -30,86 +29,86 @@ const Hero = () => {
   ];
 
   const handleJoinCommunity = () => {
-    showSuccessToast({
-      message: "Welcome to the community!",
-      emoji: "👋"
-    });
-    setTimeout(() => navigate('/mentorship'), 1000);
-  };
-
-  const handleExploreMentorship = () => {
     navigate('/mentorship');
   };
 
-  return (
-    <section className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/5 overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-secondary/20 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-      </div>
-      
-      {/* Hero carousel */}
-      <div className="relative w-full shadow-2xl">
-        <Carousel className="w-full relative">
-          <CarouselContent>
+  const handleExploreMentorship = () => {
+    navigate('/alumni');
+  };
+
+  return <section className="relative h-screen flex items-center justify-center overflow-hidden bg-white">
+      {/* Hero Background Carousel */}
+      <div className="absolute inset-0">
+        <Carousel 
+          opts={{ loop: true }} 
+          plugins={[Autoplay({ delay: 5000 })]}
+          className="h-full"
+        >
+          <CarouselContent className="h-full">
             {heroImages.map((image, index) => (
-              <CarouselItem key={index}>
-                <div className="relative">
+              <CarouselItem key={index} className="h-full">
+                <div className="relative h-full w-full">
                   <img 
                     src={image.src} 
                     alt={image.alt} 
-                    className="w-full h-[450px] md:h-[550px] object-cover" 
+                    className="w-full h-full object-cover" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                  <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-lg text-sm font-semibold">
-                    {index + 1}/{heroImages.length}
-                  </div>
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="absolute left-4" />
-          <CarouselNext className="absolute right-4" />
         </Carousel>
       </div>
       
-      {/* Mission statement */}
-      <div className="relative max-w-7xl mx-auto py-16 px-4 md:px-8">
-        <TextReveal 
-          variant="slideUp" 
-          delay={0.2}
-          className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent mb-12 block"
-        >
-          Our Mission
-        </TextReveal>
-        
-        <TextReveal 
-          variant="fadeIn" 
-          delay={0.6}
-          className="text-xl md:text-2xl text-gray-700 text-center max-w-4xl mx-auto leading-relaxed block mb-12"
-        >
-          At Knowledge Institute of Technology, we are dedicated to fostering a strong and lasting bond between 
-          students and alumni, creating a network where knowledge, experience, and 
-          opportunities flow seamlessly. Our mission is to empower students by providing 
-          direct access to mentorship, career guidance, and professional development through 
-          our alumni community.
-        </TextReveal>
-        
-        <div className="flex justify-center mt-12 gap-4 flex-wrap">
-          <AnimatedButton
-            animation="pulse"
-            size="lg"
-            className="gradient-button text-white text-lg px-10 py-6 rounded-xl flex items-center font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
-            onClick={handleJoinCommunity}
+      {/* Hero Content Overlay */}
+      <div className="relative z-10 container mx-auto px-4">
+        <div className="max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-8"
           >
-            Join our community today
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </AnimatedButton>
+            {/* Main Heading */}
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-tight text-white">
+              Connect with Alumni.
+              <br />
+              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+                Advance Your Career.
+              </span>
+            </h1>
+            
+            {/* Subheading */}
+            <p className="text-xl md:text-2xl text-white/90 leading-relaxed max-w-2xl">
+              Join 10,000+ students building meaningful connections with accomplished alumni mentors.
+            </p>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button 
+                onClick={handleJoinCommunity}
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-7 shadow-xl group"
+              >
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button 
+                onClick={handleExploreMentorship}
+                variant="outline"
+                size="lg"
+                className="border-2 border-white text-white hover:bg-white hover:text-primary text-lg px-8 py-7 bg-transparent"
+              >
+                <Users className="mr-2 h-5 w-5" />
+                Explore Alumni
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
 
 export default Hero;

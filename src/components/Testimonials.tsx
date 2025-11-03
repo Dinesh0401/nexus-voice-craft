@@ -28,16 +28,11 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="relative py-20 px-4 md:px-8 bg-gradient-to-br from-background via-secondary/5 to-primary/5 overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-20 right-10 w-64 h-64 bg-gradient-to-br from-primary/30 to-transparent rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-secondary/30 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-      </div>
+    <section className="relative py-20 px-4 md:px-8 bg-gradient-subtle overflow-hidden">
       
-      <div className="relative max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold font-display mb-4 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
             Success stories from our community
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -49,25 +44,22 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <div 
               key={index} 
-              className="group relative bg-white/80 backdrop-blur-md border border-border/50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+              className="group relative bg-white border border-border rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
-              <div className="absolute -top-4 -left-4 bg-gradient-to-br from-primary to-secondary rounded-full p-3 shadow-lg group-hover:scale-110 transition-transform">
+              <div className="absolute -top-4 -left-4 bg-gradient-to-br from-primary to-secondary rounded-full p-3 shadow-md group-hover:scale-110 transition-transform">
                 <Quote className="h-6 w-6 text-white" />
               </div>
               
-              {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
+              <p className="text-muted-foreground mb-6 pt-4 leading-relaxed">"{testimonial.quote}"</p>
               
-              <p className="relative text-muted-foreground mb-6 pt-4 leading-relaxed">"{testimonial.quote}"</p>
-              
-              <div className="relative flex items-center">
+              <div className="flex items-center">
                 <img 
                   src={testimonial.avatar} 
                   alt={testimonial.name}
-                  className="h-14 w-14 rounded-full mr-4 object-cover ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all"
+                  className="h-14 w-14 rounded-full mr-4 object-cover ring-2 ring-border"
                 />
                 <div>
-                  <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">{testimonial.name}</h4>
+                  <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
                   <p className="text-sm text-muted-foreground">{testimonial.role}, {testimonial.company}</p>
                 </div>
               </div>

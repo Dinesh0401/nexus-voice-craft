@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
+import { Users, Calendar, Award, TrendingUp } from 'lucide-react';
 interface StatisticProps {
   value: number;
   label: string;
   suffix?: string;
+  icon: React.ReactNode;
 }
 const Statistic: React.FC<StatisticProps> = ({
   value,
   label,
-  suffix = ''
+  suffix = '',
+  icon
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, {
@@ -28,45 +31,48 @@ const Statistic: React.FC<StatisticProps> = ({
       return () => controls.stop();
     }
   }, [isInView, value, suffix]);
-  return <div className="text-center p-6 rounded-2xl transition-all duration-300">
-      <h3 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-lg">
+  return <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div className="flex justify-center mb-4">
+        <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+          {icon}
+        </div>
+      </div>
+      <h3 className="text-5xl md:text-6xl font-bold text-primary mb-2">
         <span ref={ref}>0</span>
       </h3>
-      <p className="text-sm md:text-base text-muted-foreground mt-2 font-medium">{label}</p>
+      <p className="text-sm md:text-base text-muted-foreground font-medium">{label}</p>
     </div>;
 };
 const StatisticsCounter = () => {
   const stats = [{
     value: 10000,
     label: 'Alumni Network',
-    suffix: '+'
+    suffix: '+',
+    icon: <Users className="h-7 w-7 text-primary" />
   }, {
     value: 500,
     label: 'Mentorship Programs',
-    suffix: '+'
+    suffix: '+',
+    icon: <Calendar className="h-7 w-7 text-primary" />
   }, {
     value: 95,
     label: 'Success Rate',
-    suffix: '%'
+    suffix: '%',
+    icon: <Award className="h-7 w-7 text-primary" />
   }, {
     value: 200,
     label: 'Annual Events',
-    suffix: '+'
+    suffix: '+',
+    icon: <TrendingUp className="h-7 w-7 text-primary" />
   }];
-  return <section className="relative py-20 bg-gradient-to-br from-background via-primary/10 to-secondary/10 overflow-hidden">
-      {/* Decorative background */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-br from-primary/40 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-secondary/40 to-transparent rounded-full blur-3xl" />
-      </div>
-      
-      <div className="relative container mx-auto">
+  return <section className="py-20 bg-gradient-subtle overflow-hidden">
+      <div className="container mx-auto px-4">
         <motion.div initial="hidden" whileInView="visible" viewport={{
         once: true,
         amount: 0.5
       }} transition={{
-        staggerChildren: 0.2
-      }} className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        staggerChildren: 0.15
+      }} className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat, index) => <motion.div key={index} variants={{
           hidden: {
             opacity: 0,
@@ -76,10 +82,8 @@ const StatisticsCounter = () => {
             opacity: 1,
             y: 0
           }
-        }} className="group">
-              <div className="text-center p-6 rounded-2xl bg-white/60 backdrop-blur-md border border-border/50 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                <Statistic {...stat} />
-              </div>
+        }}>
+              <Statistic {...stat} />
             </motion.div>)}
         </motion.div>
       </div>
