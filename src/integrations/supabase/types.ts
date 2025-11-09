@@ -333,6 +333,122 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          additional_info: string | null
+          created_at: string | null
+          dietary_requirements: string | null
+          event_id: string
+          id: string
+          registered_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          additional_info?: string | null
+          created_at?: string | null
+          dietary_requirements?: string | null
+          event_id: string
+          id?: string
+          registered_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          additional_info?: string | null
+          created_at?: string | null
+          dietary_requirements?: string | null
+          event_id?: string
+          id?: string
+          registered_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          alumni_only: boolean | null
+          created_at: string | null
+          current_attendees: number | null
+          description: string | null
+          end_date: string | null
+          event_type: string
+          featured: boolean | null
+          id: string
+          image_url: string | null
+          is_virtual: boolean | null
+          location: string | null
+          max_attendees: number | null
+          meeting_link: string | null
+          organizer_id: string | null
+          price: number | null
+          sponsored_by: string | null
+          start_date: string
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          alumni_only?: boolean | null
+          created_at?: string | null
+          current_attendees?: number | null
+          description?: string | null
+          end_date?: string | null
+          event_type: string
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          is_virtual?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          meeting_link?: string | null
+          organizer_id?: string | null
+          price?: number | null
+          sponsored_by?: string | null
+          start_date: string
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          alumni_only?: boolean | null
+          created_at?: string | null
+          current_attendees?: number | null
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          is_virtual?: boolean | null
+          location?: string | null
+          max_attendees?: number | null
+          meeting_link?: string | null
+          organizer_id?: string | null
+          price?: number | null
+          sponsored_by?: string | null
+          start_date?: string
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       knowledge_base: {
         Row: {
           content: string
@@ -395,6 +511,101 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      mentorship_requests: {
+        Row: {
+          accepted_at: string | null
+          completed_at: string | null
+          created_at: string | null
+          goals: Json | null
+          id: string
+          mentee_id: string
+          mentor_id: string
+          mentor_response: string | null
+          message: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          goals?: Json | null
+          id?: string
+          mentee_id: string
+          mentor_id: string
+          mentor_response?: string | null
+          message?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          goals?: Json | null
+          id?: string
+          mentee_id?: string
+          mentor_id?: string
+          mentor_response?: string | null
+          message?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      mentorship_sessions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          feedback: Json | null
+          id: string
+          meeting_link: string | null
+          mentorship_id: string
+          notes: string | null
+          scheduled_at: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          feedback?: Json | null
+          id?: string
+          meeting_link?: string | null
+          mentorship_id: string
+          notes?: string | null
+          scheduled_at: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          feedback?: Json | null
+          id?: string
+          meeting_link?: string | null
+          mentorship_id?: string
+          notes?: string | null
+          scheduled_at?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentorship_sessions_mentorship_id_fkey"
+            columns: ["mentorship_id"]
+            isOneToOne: false
+            referencedRelation: "mentorship_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       message_status: {
         Row: {
@@ -490,6 +701,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mock_interviews: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          feedback: Json | null
+          id: string
+          interviewer_id: string | null
+          meeting_link: string | null
+          notes: string | null
+          questions: Json | null
+          rating: number | null
+          scheduled_at: string | null
+          status: string | null
+          student_id: string
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          feedback?: Json | null
+          id?: string
+          interviewer_id?: string | null
+          meeting_link?: string | null
+          notes?: string | null
+          questions?: Json | null
+          rating?: number | null
+          scheduled_at?: string | null
+          status?: string | null
+          student_id: string
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          feedback?: Json | null
+          id?: string
+          interviewer_id?: string | null
+          meeting_link?: string | null
+          notes?: string | null
+          questions?: Json | null
+          rating?: number | null
+          scheduled_at?: string | null
+          status?: string | null
+          student_id?: string
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       notification_preferences: {
         Row: {
@@ -655,6 +923,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       video_sessions: {
         Row: {
           ended_at: string | null
@@ -687,10 +979,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      binary_quantize: {
-        Args: { "": string } | { "": unknown }
-        Returns: unknown
-      }
       get_user_connections: {
         Args: { user_uuid: string }
         Returns: {
@@ -702,58 +990,14 @@ export type Database = {
           status: string
         }[]
       }
-      halfvec_avg: {
-        Args: { "": number[] }
-        Returns: unknown
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
       }
-      halfvec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      halfvec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      halfvec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
-      hnsw_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_sparsevec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnswhandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflat_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflat_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflathandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      l2_norm: {
-        Args: { "": unknown } | { "": unknown }
-        Returns: number
-      }
-      l2_normalize: {
-        Args: { "": string } | { "": unknown } | { "": unknown }
-        Returns: string
-      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
       match_knowledge_base: {
         Args: {
           match_count: number
@@ -769,49 +1013,13 @@ export type Database = {
           source_id: string
         }[]
       }
-      sparsevec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      sparsevec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      sparsevec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
       update_user_online_status: {
         Args: { is_online: boolean; user_id: string }
         Returns: undefined
       }
-      vector_avg: {
-        Args: { "": number[] }
-        Returns: string
-      }
-      vector_dims: {
-        Args: { "": string } | { "": unknown }
-        Returns: number
-      }
-      vector_norm: {
-        Args: { "": string }
-        Returns: number
-      }
-      vector_out: {
-        Args: { "": string }
-        Returns: unknown
-      }
-      vector_send: {
-        Args: { "": string }
-        Returns: string
-      }
-      vector_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "alumni" | "student"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -938,6 +1146,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "alumni", "student"],
+    },
   },
 } as const
