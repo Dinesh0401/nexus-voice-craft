@@ -2,7 +2,7 @@
 
 🚀 **Live Demo**: [kiotalumni](https://kiotalumnimeet.netlify.app/)
 
-## 🎯 Quick Start
+## 🎯 Quick Start 
 
 Get started in 5 minutes! See **[QUICK_START.md](./QUICK_START.md)** for instant setup.
 
