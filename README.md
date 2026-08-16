@@ -5,7 +5,8 @@
 ## 🎯 Quick Start 
 
 
-For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
+For detailed setup instructions, 
+see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 
 ## About Alumni Nexus
 
