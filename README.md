@@ -4,7 +4,6 @@
 
 ## 🎯 Quick Start 
 
-Get started in 5 minutes! See **[QUICK_START.md](./QUICK_START.md)** for instant setup.
 
 For detailed setup instructions, see **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**
 
